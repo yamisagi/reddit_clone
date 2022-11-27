@@ -2,11 +2,13 @@ import 'dart:developer' show log;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/constants/constants.dart';
 import 'package:reddit_clone/core/constants/firebase_constants.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:reddit_clone/providers/firebase_providers.dart';
+import 'package:reddit_clone/util/common/snackbar.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>(
   (ref) => AuthRepository(
@@ -28,13 +30,19 @@ class AuthRepository {
   CollectionReference get _usersCollection =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(
+    BuildContext context,
+    Key key, {
+    required String email,
+    required String password,
+  }) async {
     try {
       final UserCredential userCredential = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
+      late UserModel userModel;
 
       if (userCredential.additionalUserInfo!.isNewUser) {
-        UserModel userModel = UserModel(
+        userModel = UserModel(
           name: userCredential.user!.displayName ??
               '${userCredential.user!.email?.split('@')[0].toUpperCase()}',
           uid: userCredential.user!.uid,
@@ -47,28 +55,50 @@ class AuthRepository {
         await _usersCollection
             .doc(userCredential.user!.uid)
             .set(userModel.toMap());
-      } 
+      } else {
+        userModel = await getUserData(userCredential.user!.uid).first;
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         log('No user found for that email.');
+        showSnackBar(context, 'No user found for that email.', key);
       } else if (e.code == 'wrong-password') {
         log('Wrong password provided for that user.');
+        showSnackBar(context, 'Wrong password provided for that user.', key);
+      }else{
+        log(e.code);
+        showSnackBar(context, e.code, key);
       }
     }
+    
   }
 
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(
+    BuildContext context,
+    Key key, {
+    required String email,
+    required String password,
+  }) async {
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
+        showSnackBar(context, 'The password provided is too weak.', key);
       } else if (e.code == 'email-already-in-use') {
         log('The account already exists for that email.');
+        showSnackBar(
+            context, 'The account already exists for that email.', key);
+      }else{
+        log(e.code);
+        showSnackBar(context, e.code, key);
       }
     } catch (e) {
       log(e.toString());
+      showSnackBar(context, 'Something went wrong.', key);
     }
   }
 
@@ -76,5 +106,10 @@ class AuthRepository {
     await _auth.signOut();
   }
 
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<UserModel> getUserData(String uid) {
+    return _usersCollection
+        .doc(uid)
+        .snapshots()
+        .map((event) => UserModel.fromMap(event.data as Map<String, dynamic>));
+  }
 }

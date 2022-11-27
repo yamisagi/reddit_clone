@@ -19,7 +19,10 @@ class LoginView extends ConsumerWidget {
     final globalKey = ref.watch(globalKeyProvider);
     final emailTextEditing = ref.watch(emailTextEditingProvider.notifier);
     final passwordTextEditing = ref.watch(passwordTextEditingProvider.notifier);
+    final isLoading = ref.watch(authControllProvider);
+    final scaffoldMessengerKey = ref.watch(scaffoldMessengerKeyProvider);
     return Scaffold(
+      key: scaffoldMessengerKey,
       appBar: AppBar(
         title: Padding(
           padding:
@@ -33,7 +36,9 @@ class LoginView extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(authControllProvider.notifier).signOut();
+            },
             child: Text(
               'Continue as Guest',
               style: Theme.of(context).textTheme.headline6?.copyWith(
@@ -44,7 +49,12 @@ class LoginView extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body:
+          // isLoading
+          //     ? const Center(
+          //         child: CircularProgressIndicator(),
+          //       )          :
+          SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
@@ -86,15 +96,16 @@ class LoginView extends ConsumerWidget {
                               builder: (context, ref, child) {
                                 return SignInButton(
                                     label: 'Sign In',
-                                    onPressed: () {
-                                      ref
-                                          .read(authControllProvider)
+                                    onPressed: () async {
+                                      await ref
+                                          .read(authControllProvider.notifier)
                                           .signInWithEmailAndPassword(
+                                            context,
                                             emailTextEditing.text,
                                             passwordTextEditing.text,
                                           );
-                                      emailTextEditing.clear();
-                                      passwordTextEditing.clear();
+                                      // emailTextEditing.clear();
+                                      // passwordTextEditing.clear();
                                     },
                                     top: 0.85,
                                     bottom: 0.15);
@@ -105,13 +116,15 @@ class LoginView extends ConsumerWidget {
                                 label: 'Sign Up',
                                 onPressed: () async {
                                   await ref
-                                      .read(authControllProvider)
+                                      .read(authControllProvider.notifier)
                                       .signUpWithEmailAndPassword(
+                                        context,
                                         emailTextEditing.text,
                                         passwordTextEditing.text,
                                       );
-                                  emailTextEditing.clear();
-                                  passwordTextEditing.clear();
+
+                                  // emailTextEditing.clear();
+                                  // passwordTextEditing.clear();
                                 },
                                 top: 0.95,
                                 bottom: 0.05),
