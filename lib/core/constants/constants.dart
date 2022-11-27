@@ -5,7 +5,11 @@ class Constants {
   static const String logoPath = 'assets/images/logo.png';
   static const String backgroundPath = 'assets/images/background.png';
   static const String splashPath = 'assets/images/splashscreen.png';
+  static const avatarDefault =
+      'https://external-preview.redd.it/5kh5OreeLd85QsqYO1Xz_4XSLYwZntfjqou-8fyBFoE.png?auto=webp&s=dbdabd04c399ce9c761ff899f5d38656d1de87c2';
 
+  static const String bannerDefault =
+      'https://cdn.pixabay.com/photo/2017/03/25/17/55/colorful-2174045__480.png';
   // ----------------RADIUS&&STYLE----------------
 
   static final OutlineInputBorder outlineInputBorder = OutlineInputBorder(

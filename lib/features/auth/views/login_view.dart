@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/core/constants/constants.dart';
+import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
+import 'package:reddit_clone/providers/text_editing_controller.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/util/login_view/login_textfield.dart';
 import 'package:reddit_clone/util/login_view/sign_in_button.dart';
 import 'package:reddit_clone/util/login_view/text_widget.dart';
 
-class LoginView extends StatelessWidget {
+final globalKeyProvider =
+    Provider<GlobalKey<ScaffoldState>>((ref) => GlobalKey<ScaffoldState>());
+
+class LoginView extends ConsumerWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final globalKey = ref.watch(globalKeyProvider);
+    final emailTextEditing = ref.watch(emailTextEditingProvider.notifier);
+    final passwordTextEditing = ref.watch(passwordTextEditingProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -35,23 +45,28 @@ class LoginView extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
               child: Stack(
                 children: [
-                  const Image(
-                    image: AssetImage(Constants.backgroundPath),
+                  Image(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    width: MediaQuery.of(context).size.width,
+                    image: const AssetImage(Constants.backgroundPath),
+                    fit: BoxFit.cover,
                   ),
                   Container(
                     alignment: Alignment.topCenter,
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.40,
+                      top: MediaQuery.of(context).size.height * 0.28,
                       right: 0.0,
                       left: 0.0,
                     ),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.65,
+                      height: MediaQuery.of(context).size.height * 0.6,
                       width: MediaQuery.of(context).size.width,
                       child: Card(
                         shape: Constants.cardRadius,
@@ -59,57 +74,52 @@ class LoginView extends StatelessWidget {
                         child: Column(
                           children: [
                             const StaticTexts(),
-                            Padding(
-                              padding: Constants.textFieldPadding,
-                              child: TextField(
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    ?.copyWith(color: ColorPallete.redColor),
-                                decoration: InputDecoration(
-                                    labelText: 'Enter your email',
-                                    labelStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: ColorPallete.greyColor
-                                            .withOpacity(0.8)),
-                                    focusedBorder: Constants.outlineInputBorder,
-                                    enabledBorder:
-                                        Constants.outlineInputBorder),
-                              ),
+                            LoginTextField(
+                              controller: emailTextEditing,
+                              label: 'Enter your email',
                             ),
-                            Padding(
-                              padding: Constants.textFieldPadding,
-                              child: TextField(
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    ?.copyWith(color: ColorPallete.redColor),
-                                decoration: InputDecoration(
-                                    labelText: 'Enter your Password',
-                                    labelStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: ColorPallete.greyColor
-                                            .withOpacity(0.8)),
-                                    focusedBorder: Constants.outlineInputBorder,
-                                    enabledBorder:
-                                        Constants.outlineInputBorder),
-                              ),
+                            LoginTextField(
+                              controller: passwordTextEditing,
+                              label: 'Enter your password',
                             ),
+                            Consumer(
+                              builder: (context, ref, child) {
+                                return SignInButton(
+                                    label: 'Sign In',
+                                    onPressed: () {
+                                      ref
+                                          .read(authControllProvider)
+                                          .signInWithEmailAndPassword(
+                                            emailTextEditing.text,
+                                            passwordTextEditing.text,
+                                          );
+                                      emailTextEditing.clear();
+                                      passwordTextEditing.clear();
+                                    },
+                                    top: 0.85,
+                                    bottom: 0.15);
+                              },
+                            ),
+                            SignInButton(
+                                key: globalKey,
+                                label: 'Sign Up',
+                                onPressed: () async {
+                                  await ref
+                                      .read(authControllProvider)
+                                      .signUpWithEmailAndPassword(
+                                        emailTextEditing.text,
+                                        passwordTextEditing.text,
+                                      );
+                                  emailTextEditing.clear();
+                                  passwordTextEditing.clear();
+                                },
+                                top: 0.95,
+                                bottom: 0.05),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  SignInButton(
-                      label: 'Sign In',
-                      onPressed: () {},
-                      top: 0.85,
-                      bottom: 0.15),
-                  SignInButton(
-                      label: 'Sign Up',
-                      onPressed: () {},
-                      top: 0.95,
-                      bottom: 0.05),
                 ],
               ),
             ),

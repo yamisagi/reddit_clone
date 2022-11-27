@@ -13,6 +13,8 @@ class ColorPallete {
           scaffoldBackgroundColor: blackColor,
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
+            scrolledUnderElevation: 1,
+            elevation: 1,
             backgroundColor: drawerColor,
             iconTheme: IconThemeData(
               color: whiteColor,
@@ -30,8 +32,9 @@ class ColorPallete {
           scaffoldBackgroundColor: whiteColor,
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
+            scrolledUnderElevation: 1,
             backgroundColor: whiteColor,
-            elevation: 0,
+            elevation: 1,
             iconTheme: IconThemeData(
               color: blackColor,
             ),

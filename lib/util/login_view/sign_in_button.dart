@@ -5,7 +5,9 @@ class SignInButton extends StatelessWidget {
   const SignInButton({
     Key? key,
     required this.label,
-    required this.onPressed, required this.top, required this.bottom,
+    required this.onPressed,
+    required this.top,
+    required this.bottom,
   }) : super(key: key);
   final String label;
   final VoidCallback onPressed;
@@ -14,11 +16,8 @@ class SignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: MediaQuery.of(context).size.height * top,
-      bottom: MediaQuery.of(context).size.height * bottom,
-      left: MediaQuery.of(context).size.width * 0.25,
-      right: MediaQuery.of(context).size.width * 0.25,
+    return Padding(
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorPallete.redColor,
