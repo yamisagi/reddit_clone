@@ -62,7 +62,7 @@ class UserModel {
       isAnonymous: map['isAnonymous'] as bool,
       karma: map['karma'] as int,
       awards: List<String>.from(
-        (map['awards'] as List<String>),
+        (map['awards'] as List<dynamic>),
       ),
     );
   }

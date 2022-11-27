@@ -65,12 +65,11 @@ class AuthRepository {
       } else if (e.code == 'wrong-password') {
         log('Wrong password provided for that user.');
         showSnackBar(context, 'Wrong password provided for that user.', key);
-      }else{
+      } else {
         log(e.code);
         showSnackBar(context, e.code, key);
       }
     }
-    
   }
 
   Future<void> signUpWithEmailAndPassword(
@@ -80,10 +79,27 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      late UserModel userModel;
+
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        userModel = UserModel(
+          name: userCredential.user!.displayName ??
+              '${userCredential.user!.email?.split('@')[0].toUpperCase()}',
+          uid: userCredential.user!.uid,
+          profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
+          banner: Constants.bannerDefault,
+          isAnonymous: userCredential.user!.isAnonymous,
+          karma: 0,
+          awards: [],
+        );
+        await _usersCollection
+            .doc(userCredential.user!.uid)
+            .set(userModel.toMap());
+      } else {
+        userModel = await getUserData(userCredential.user!.uid).first;
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
@@ -92,7 +108,7 @@ class AuthRepository {
         log('The account already exists for that email.');
         showSnackBar(
             context, 'The account already exists for that email.', key);
-      }else{
+      } else {
         log(e.code);
         showSnackBar(context, e.code, key);
       }
@@ -107,9 +123,7 @@ class AuthRepository {
   }
 
   Stream<UserModel> getUserData(String uid) {
-    return _usersCollection
-        .doc(uid)
-        .snapshots()
-        .map((event) => UserModel.fromMap(event.data as Map<String, dynamic>));
+    return _usersCollection.doc(uid).snapshots().map((snapshot) =>
+        UserModel.fromMap(snapshot.data() as Map<String, dynamic>));
   }
 }
