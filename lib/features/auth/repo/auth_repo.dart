@@ -30,6 +30,9 @@ class AuthRepository {
   CollectionReference get _usersCollection =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
+  // This will return the current users changes. Logged in or logged out etc..
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
   Future<void> signInWithEmailAndPassword(
     BuildContext context,
     Key key, {

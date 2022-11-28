@@ -49,96 +49,96 @@ class LoginView extends ConsumerWidget {
           ),
         ],
       ),
-      body:
-          // isLoading
-          //     ? const Center(
-          //         child: CircularProgressIndicator(),
-          //       )          :
-          SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            SingleChildScrollView(
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
-              child: Stack(
+              child: Column(
                 children: [
-                  Image(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    width: MediaQuery.of(context).size.width,
-                    image: const AssetImage(Constants.backgroundPath),
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    alignment: Alignment.topCenter,
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.28,
-                      right: 0.0,
-                      left: 0.0,
-                    ),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      width: MediaQuery.of(context).size.width,
-                      child: Card(
-                        shape: Constants.cardRadius,
-                        color: ColorPallete.whiteColor,
-                        child: Column(
-                          children: [
-                            const StaticTexts(),
-                            LoginTextField(
-                              controller: emailTextEditing,
-                              label: 'Enter your email',
-                            ),
-                            LoginTextField(
-                              controller: passwordTextEditing,
-                              label: 'Enter your password',
-                            ),
-                            Consumer(
-                              builder: (context, ref, child) {
-                                return SignInButton(
-                                    label: 'Sign In',
-                                    onPressed: () async {
-                                      await ref
-                                          .read(authControllProvider.notifier)
-                                          .signInWithEmailAndPassword(
-                                            context,
-                                            emailTextEditing.text,
-                                            passwordTextEditing.text,
-                                          );
-                                      // emailTextEditing.clear();
-                                      // passwordTextEditing.clear();
-                                    },
-                                    top: 0.85,
-                                    bottom: 0.15);
-                              },
-                            ),
-                            SignInButton(
-                                key: globalKey,
-                                label: 'Sign Up',
-                                onPressed: () async {
-                                  await ref
-                                      .read(authControllProvider.notifier)
-                                      .signUpWithEmailAndPassword(
-                                        context,
-                                        emailTextEditing.text,
-                                        passwordTextEditing.text,
-                                      );
-
-                                  // emailTextEditing.clear();
-                                  // passwordTextEditing.clear();
-                                },
-                                top: 0.95,
-                                bottom: 0.05),
-                          ],
+                  SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: Stack(
+                      children: [
+                        Image(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          width: MediaQuery.of(context).size.width,
+                          image: const AssetImage(Constants.backgroundPath),
+                          fit: BoxFit.cover,
                         ),
-                      ),
+                        Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.28,
+                            right: 0.0,
+                            left: 0.0,
+                          ),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                              shape: Constants.cardRadius,
+                              color: ColorPallete.whiteColor,
+                              child: Column(
+                                children: [
+                                  const StaticTexts(),
+                                  LoginTextField(
+                                    controller: emailTextEditing,
+                                    label: 'Enter your email',
+                                  ),
+                                  LoginTextField(
+                                    controller: passwordTextEditing,
+                                    label: 'Enter your password',
+                                  ),
+                                  Consumer(
+                                    builder: (context, ref, child) {
+                                      return SignInButton(
+                                          label: 'Sign In',
+                                          onPressed: () async {
+                                            await ref
+                                                .read(authControllProvider
+                                                    .notifier)
+                                                .signInWithEmailAndPassword(
+                                                  context,
+                                                  emailTextEditing.text,
+                                                  passwordTextEditing.text,
+                                                );
+                                            // emailTextEditing.clear();
+                                            // passwordTextEditing.clear();
+                                          },
+                                          top: 0.85,
+                                          bottom: 0.15);
+                                    },
+                                  ),
+                                  SignInButton(
+                                      key: globalKey,
+                                      label: 'Sign Up',
+                                      onPressed: () async {
+                                        await ref
+                                            .read(authControllProvider.notifier)
+                                            .signUpWithEmailAndPassword(
+                                              context,
+                                              emailTextEditing.text,
+                                              passwordTextEditing.text,
+                                            );
+
+                                        // emailTextEditing.clear();
+                                        // passwordTextEditing.clear();
+                                      },
+                                      top: 0.95,
+                                      bottom: 0.05),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

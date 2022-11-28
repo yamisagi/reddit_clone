@@ -14,6 +14,16 @@ final authControllProvider = StateNotifierProvider<AuthController, bool>(
       authRepository: ref.watch(authRepositoryProvider), ref: ref),
 );
 
+final authStateChangesProvider = StreamProvider<User?>((ref) {
+  final authController = ref.watch(authControllProvider.notifier);
+  return authController.authStateChanges;
+});
+
+final getUserDataProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllProvider.notifier);
+  return authController.getUserData(uid);
+});
+
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -22,6 +32,8 @@ class AuthController extends StateNotifier<bool> {
       : _authRepository = authRepository,
         _ref = ref,
         super(false);
+
+  Stream<User?> get authStateChanges => _authRepository.authStateChanges;
 
   Future<void> signInWithEmailAndPassword(
     BuildContext context,
@@ -62,5 +74,9 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     await _authRepository.signOut();
     state = false;
+  }
+
+  Stream<UserModel> getUserData(String uid) {
+    return _authRepository.getUserData(uid);
   }
 }
