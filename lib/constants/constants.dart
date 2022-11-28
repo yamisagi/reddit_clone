@@ -10,6 +10,10 @@ class Constants {
 
   static const String bannerDefault =
       'https://cdn.pixabay.com/photo/2017/03/25/17/55/colorful-2174045__480.png';
+
+      static const createCommunity = 'Create Community';
+      static const communityName = 'Community Name';
+      static const communityNameHint = 'r/Cool_Community';
   // ----------------RADIUS&&STYLE----------------
 
   static final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
@@ -22,6 +26,10 @@ class Constants {
 
   static final cardRadius = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(30.0),
+  );
+
+  static final buttonStyle = RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20.0),
   );
 
   // ----------------PADDING && MARGIN----------------

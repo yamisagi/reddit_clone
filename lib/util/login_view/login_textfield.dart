@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reddit_clone/core/constants/constants.dart';
+import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/views/login_view.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
 

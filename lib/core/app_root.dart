@@ -6,7 +6,6 @@ import 'package:reddit_clone/models/user_model.dart';
 import 'package:reddit_clone/router.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
 import 'package:reddit_clone/util/common/error_widget.dart';
-import 'package:reddit_clone/util/common/loading_widget.dart';
 import 'package:routemaster/routemaster.dart';
 
 class AppRoot extends ConsumerStatefulWidget {
@@ -19,7 +18,7 @@ class AppRoot extends ConsumerStatefulWidget {
 class _AppRootState extends ConsumerState<AppRoot> {
   UserModel? _userModel;
 
-  Future<void> _init(WidgetRef ref, User data) async {
+  void _init(WidgetRef ref, User data) async {
     // Get the user data from the database
     _userModel = await ref
         .read(authControllProvider.notifier)
@@ -60,7 +59,9 @@ class _AppRootState extends ConsumerState<AppRoot> {
           error: ((error, stackTrace) => ErrorText(
                 errorText: error.toString(),
               )),
-          loading: (() => const LoadingWidget()),
+          loading: (() => const Center(
+                child: CircularProgressIndicator(),
+              )),
         );
   }
 }

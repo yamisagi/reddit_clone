@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_clone/features/auth/views/community_view.dart';
 import 'package:reddit_clone/features/auth/views/home_view.dart';
 import 'package:reddit_clone/features/auth/views/login_view.dart';
 import 'package:routemaster/routemaster.dart';
@@ -9,4 +10,6 @@ final signedOutRoute = RouteMap(routes: {
 
 final signedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage<void>(child: HomeView()),
+  '/create_community': (_) =>
+      const MaterialPage<void>(child: CreateCommunityView()),
 });

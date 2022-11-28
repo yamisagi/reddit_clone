@@ -13,6 +13,7 @@ class ColorPallete {
           scaffoldBackgroundColor: blackColor,
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
+            centerTitle: true,
             scrolledUnderElevation: 1,
             elevation: 1,
             backgroundColor: drawerColor,
@@ -30,8 +31,10 @@ class ColorPallete {
   static var lightModeAppTheme = ThemeData.light(useMaterial3: true) //
       .copyWith(
           scaffoldBackgroundColor: whiteColor,
+          
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
+            centerTitle: true,
             scrolledUnderElevation: 1,
             backgroundColor: whiteColor,
             elevation: 1,
