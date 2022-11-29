@@ -1,95 +1,57 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
-import 'package:reddit_clone/theme/product_theme.dart';
-import 'package:reddit_clone/util/common/loading_widget.dart';
+import 'package:reddit_clone/util/community_view/community_header.dart';
 
-class CreateCommunityView extends ConsumerStatefulWidget {
-  const CreateCommunityView({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CreateCommunityViewState();
-}
-
-class _CreateCommunityViewState extends ConsumerState<CreateCommunityView> {
-  late final TextEditingController _communityNameController;
-  @override
-  void initState() {
-    super.initState();
-    _communityNameController = TextEditingController();
-  }
+class CommunityView extends ConsumerWidget {
+  const CommunityView({super.key, required this.name});
+  final String name;
 
   @override
-  void dispose() {
-    super.dispose();
-    _communityNameController.dispose();
-  }
-
-  void createCommunity() {
-    ref.read(communityControllerProvider.notifier).createCommunity(
-          _communityNameController.text.replaceAll(' ', '').toLowerCase(),
-          context,
-        );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isLoading = ref.watch(communityControllerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uid = ref.watch(userProvider)?.uid ?? '';
     return Scaffold(
-      key: ref.read(scaffoldMessengerKeyProvider),
-      appBar: AppBar(
-        title: const Text('Create Community'),
-      ),
-      body: isLoading
-          ? const LoadingWidget()
-          : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(Constants.communityName),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  TextField(
-                    controller: _communityNameController,
-                    decoration: const InputDecoration(
-                      hintText: Constants.communityNameHint,
-                      filled: true,
-                      fillColor: ColorPallete.greyColor,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(10.0),
-                    ),
-                    maxLength: 21,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: Constants.buttonStyle,
-                      textStyle: Theme.of(context).textTheme.button?.copyWith(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                      minimumSize: Size(
-                        double.infinity,
-                        MediaQuery.of(context).size.height * 0.06,
+      body: ref.watch(getCommunityByNameProvider(name)).when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(child: Text(error.toString())),
+            data: (community) {
+              return NestedScrollView(
+                  headerSliverBuilder: ((context, innerBoxIsScrolled) {
+                    return [
+                      SliverAppBar(
+                        expandedHeight:
+                            MediaQuery.of(context).size.height * 0.2,
+                        floating: true,
+                        snap: true,
+                        flexibleSpace: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image.network(community.communityBanner,
+                                  fit: BoxFit.cover),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      createCommunity();
-                    },
-                    child: const Text(Constants.createCommunity),
-                  )
-                ],
-              ),
-            ),
+                      SliverPadding(
+                        padding: Constants.regularPadding,
+                        sliver: CommunityHeaderWidget(
+                          community: community,
+                          isModerator:
+                              community.communityModerators.contains(uid),
+                          isMember: community.communityMembers.contains(uid),
+                        ),
+                      ),
+                    ];
+                  }),
+                  body: Center(
+                    child: Text(community.communityName),
+                  ));
+            },
+          ),
     );
   }
 }

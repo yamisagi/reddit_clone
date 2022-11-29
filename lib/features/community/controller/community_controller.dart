@@ -20,6 +20,12 @@ final communityControllerProvider =
   return CommunityController(communityRepository: communityRepo, ref: ref);
 });
 
+final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
+  return ref
+      .watch(communityControllerProvider.notifier)
+      .getCommunityByName(name);
+});
+
 class CommunityController extends StateNotifier<bool> {
   final CommunityRepository _communityRepository;
   final Ref _ref;
@@ -37,7 +43,7 @@ class CommunityController extends StateNotifier<bool> {
         CommunityModel community = CommunityModel(
           communityName: name,
           communityId: name,
-          communityAvatar: Constants.bannerDefault,
+          communityAvatar: Constants.avatarDefault,
           communityBanner: Constants.bannerDefault,
           communityMembers: [uid],
           communityModerators: [uid],
@@ -67,6 +73,10 @@ class CommunityController extends StateNotifier<bool> {
         state = false;
       }
     }
+  }
+
+  Stream<CommunityModel> getCommunityByName(String communityName) {
+    return _communityRepository.getCommunityByName(communityName);
   }
 
   Stream<List<CommunityModel>> getCommunities() {

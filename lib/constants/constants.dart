@@ -11,10 +11,10 @@ class Constants {
   static const String bannerDefault =
       'https://cdn.pixabay.com/photo/2017/03/25/17/55/colorful-2174045__480.png';
 
-      static const createCommunity = 'Create Community';
-      static const communityName = 'Community Name';
-      static const communityNameHint = 'r/Cool_Community';
-      static const noCommunities = 'No communities :/';
+  static const createCommunity = 'Create Community';
+  static const communityName = 'Community Name';
+  static const communityNameHint = 'r/Cool_Community';
+  static const noCommunities = 'No communities :/';
   // ----------------RADIUS&&STYLE----------------
 
   static final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
@@ -36,4 +36,8 @@ class Constants {
   // ----------------PADDING && MARGIN----------------
 
   static const textFieldPadding = EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0);
+  static const regularPadding = EdgeInsets.all(16.0);
+  static const smallPadding = EdgeInsets.all(8.0);
+
+  static const buttonPadding = EdgeInsets.symmetric(horizontal: 16.0);
 }

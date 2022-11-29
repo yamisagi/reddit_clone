@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
-import 'package:reddit_clone/util/common/loading_widget.dart';
+import 'package:reddit_clone/theme/product_theme.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityListDrawer extends ConsumerWidget {
@@ -23,7 +23,7 @@ class CommunityListDrawer extends ConsumerWidget {
               leading: const Icon(Icons.add),
               onTap: () => navigateToCreateCommunity(context),
             ),
-            ref.read(getCommunityProvider).when(
+            ref.watch(getCommunityProvider).when(
                   data: (data) {
                     if (data.isEmpty) {
                       return Padding(
@@ -44,14 +44,20 @@ class CommunityListDrawer extends ConsumerWidget {
                     }
                     return Expanded(
                       child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: data.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text(data[index].communityName),
+                            title: Text("r/${data[index].communityName}"),
                             leading: CircleAvatar(
+                              backgroundColor: ColorPallete.greyColor,
                               backgroundImage:
                                   NetworkImage(data[index].communityBanner),
                             ),
+                            onTap: () {
+                              Routemaster.of(context)
+                                  .push("/r/${data[index].communityName}");
+                            },
                           );
                         },
                       ),
@@ -59,7 +65,8 @@ class CommunityListDrawer extends ConsumerWidget {
                   },
                   error: ((error, stackTrace) =>
                       Center(child: Text('Error $error'))),
-                  loading: () => const LoadingWidget(),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
           ],
         ),

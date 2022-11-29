@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_clone/views/community_view.dart';
+import 'package:reddit_clone/views/create_community_view.dart';
 import 'package:reddit_clone/views/home_view.dart';
 import 'package:reddit_clone/views/login_view.dart';
 import 'package:routemaster/routemaster.dart';
@@ -14,6 +15,10 @@ final signedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage<void>(child: HomeView()),
   '/create_community': (_) =>
       const MaterialPage<void>(child: CreateCommunityView()),
+      // This is the route for the community view 
+      // Which is special usage. And it is dynamic.
+  '/r/:name': (info) => MaterialPage<void>(
+      child: CommunityView(name: info.pathParameters['name']!)),
 });
 
 final loadingRoute = RouteMap(routes: {

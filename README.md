@@ -67,8 +67,12 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 
 * [x] Project Setup
 * [x] Implement Firebase Auth for Login and Register
+* [x] Implement Firebase Firestore 
+* [x] Implement Riverpod for State Management
+* [x] Implement Authentication and Controllers 
+* [x] Implement Create Member, Create Community
+* [x] Implement IsModerator, IsMember logic
 * [ ] Implement UI Design
-* [ ] Implement Riverpod 
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later
