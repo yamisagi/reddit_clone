@@ -14,6 +14,7 @@ class Constants {
       static const createCommunity = 'Create Community';
       static const communityName = 'Community Name';
       static const communityNameHint = 'r/Cool_Community';
+      static const noCommunities = 'No communities :/';
   // ----------------RADIUS&&STYLE----------------
 
   static final OutlineInputBorder outlineInputBorder = OutlineInputBorder(

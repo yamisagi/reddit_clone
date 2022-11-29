@@ -9,6 +9,11 @@ import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
 import 'package:routemaster/routemaster.dart';
 
+final getCommunityProvider = StreamProvider((ref) {
+  final communityController = ref.watch(communityControllerProvider.notifier);
+  return communityController.getCommunities();
+});
+
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
   final communityRepo = ref.watch(communityRepoProvider);
@@ -62,5 +67,10 @@ class CommunityController extends StateNotifier<bool> {
         state = false;
       }
     }
+  }
+
+  Stream<List<CommunityModel>> getCommunities() {
+    final uid = _ref.read(userProvider)?.uid ?? '';
+    return _communityRepository.getCommunities(uid);
   }
 }

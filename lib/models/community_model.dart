@@ -48,15 +48,15 @@ class CommunityModel {
 
   factory CommunityModel.fromMap(Map<String, dynamic> map) {
     return CommunityModel(
-      communityName: map['communityName'] as String,
-      communityId: map['communityId'] as String,
-      communityBanner: map['communityBanner'] as String,
-      communityAvatar: map['communityAvatar'] as String,
-      communityMembers:
-          List<String>.from((map['communityMembers'] as List<String>)),
-      communityModerators:
-          List<String>.from((map['communityModerators'] as List<String>)),
-    );
+        communityName: map['communityName'] as String,
+        communityId: map['communityId'] as String,
+        communityBanner: map['communityBanner'] as String,
+        communityAvatar: map['communityAvatar'] as String,
+        communityMembers: List<String>.from((map['communityMembers'])),
+        communityModerators: List<String>.from((map['communityModerators']))
+        // Fix: When we call from DB we get members , It throws an error, List<String> is not a subtype of List<dynamic>.
+        // and try to show, So we need remove  cast  List<String>
+        );
   }
 
   @override

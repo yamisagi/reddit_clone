@@ -49,8 +49,14 @@ class _AppRootState extends ConsumerState<AppRoot> {
                       // Navigate to home page
                       return signedInRoute;
                     }
-                  } //Else navigate to login page
-                  return signedOutRoute;
+                  } else {
+                    //Else navigate to login page
+                    return signedOutRoute;
+                  }
+                  // When user refreshes the page and user data is not fetched yet from the database
+                  // Show loading widget until user data is fetched.
+                  //! This is to avoid showing login page when user is already logged in
+                  return loadingRoute;
                 },
               ),
               routeInformationParser: const RoutemasterParser(),

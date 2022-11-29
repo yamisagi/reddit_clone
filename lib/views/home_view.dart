@@ -17,15 +17,13 @@ class HomeView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Home'),
         centerTitle: false,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-                onPressed: () {
-                  displayCommunityListDrawer(context);
-                },
-                icon: const Icon(Icons.menu));
-          }
-        ),
+        leading: Builder(builder: (context) {
+          return IconButton(
+              onPressed: () {
+                displayCommunityListDrawer(context);
+              },
+              icon: const Icon(Icons.menu));
+        }),
         actions: [
           IconButton(
             onPressed: () {},
@@ -41,6 +39,9 @@ class HomeView extends ConsumerWidget {
         ],
       ),
       drawer: const CommunityListDrawer(),
+      body: Center(
+        child: Text('User ID: ${user.uid}'),
+      ),
     );
   }
 }
