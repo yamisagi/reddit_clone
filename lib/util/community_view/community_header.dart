@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/models/community_model.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CommunityHeaderWidget extends StatelessWidget {
   final CommunityModel community;
@@ -12,6 +13,10 @@ class CommunityHeaderWidget extends StatelessWidget {
     required this.isModerator,
     required this.isMember,
   }) : super(key: key);
+
+  void navigateToModTools(BuildContext context, String name) {
+    Routemaster.of(context).push('/mod_tools/$name');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,9 @@ class CommunityHeaderWidget extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         padding: Constants.buttonPadding,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        navigateToModTools(context, community.communityName);
+                      },
                       icon: const Icon(Icons.more_horiz),
                       label: const Text("Moderate"),
                     )

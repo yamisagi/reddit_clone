@@ -51,4 +51,20 @@ class CommunityRepository {
 
   CollectionReference get _communityCollection =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
+
+  Future editCommunity(CommunityModel community) async {
+    try {
+      final communityDoc =
+          await _communityCollection.doc(community.communityName).get();
+      if (!communityDoc.exists) {
+        throw Exception('Community does not exists');
+      }
+      await _communityCollection
+          .doc(community.communityName)
+          .update(community.toMap());
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
 }

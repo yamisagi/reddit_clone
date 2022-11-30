@@ -33,6 +33,8 @@ class Constants {
     borderRadius: BorderRadius.circular(20.0),
   );
 
+  static const dottedBorder = Radius.circular(12);
+  static final rectRadius = BorderRadius.circular(12);
   // ----------------PADDING && MARGIN----------------
 
   static const textFieldPadding = EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0);

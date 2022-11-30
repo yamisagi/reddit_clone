@@ -52,7 +52,7 @@ class CommunityListDrawer extends ConsumerWidget {
                             leading: CircleAvatar(
                               backgroundColor: ColorPallete.greyColor,
                               backgroundImage:
-                                  NetworkImage(data[index].communityBanner),
+                                  NetworkImage(data[index].communityAvatar),
                             ),
                             onTap: () {
                               Routemaster.of(context)

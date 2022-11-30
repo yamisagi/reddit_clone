@@ -30,8 +30,10 @@ class CommunityView extends ConsumerWidget {
                         flexibleSpace: Stack(
                           children: [
                             Positioned.fill(
-                              child: Image.network(community.communityBanner,
-                                  fit: BoxFit.cover),
+                              child: Image.network(
+                                community.communityBanner,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ],
                         ),
