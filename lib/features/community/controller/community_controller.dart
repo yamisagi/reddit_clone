@@ -13,7 +13,8 @@ import 'package:reddit_clone/providers/storage_repo_provider.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
 import 'package:routemaster/routemaster.dart';
 
-final getCommunityProvider = StreamProvider((ref) {
+// Create StreamProvider to get communities
+final userCommunitiesProvider = StreamProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getCommunities();
 });
@@ -28,11 +29,18 @@ final communityControllerProvider =
     storageRepository: storageRepo,
   );
 });
-
+//
+//
 final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
   return ref
       .watch(communityControllerProvider.notifier)
       .getCommunityByName(name);
+});
+
+final searchProvider = StreamProvider.family((ref, String query) {
+  return ref
+      .watch(communityControllerProvider.notifier)
+      .searchCommunities(query);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -93,8 +101,8 @@ class CommunityController extends StateNotifier<bool> {
   }
 
   Stream<List<CommunityModel>> getCommunities() {
-    final uid = _ref.read(userProvider)?.uid ?? '';
-    return _communityRepository.getCommunities(uid);
+   final uid = _ref.read(userProvider)!.uid;
+    return _communityRepository.getUserCommunities(uid);
   }
 
   Future editCommunity(
@@ -153,6 +161,45 @@ class CommunityController extends StateNotifier<bool> {
         'Something went wrong',
         _ref.read(scaffoldMessengerKeyProvider),
       );
+    }
+  }
+
+  Future<void> joinCommunityOrLeave(
+      {required CommunityModel community,
+      required BuildContext context}) async {
+    try {
+      final uid = _ref.read(userProvider)?.uid ?? '';
+      if (community.communityMembers.contains(uid)) {
+        await _communityRepository.leaveCommunity(community.communityName, uid);
+        showSnackBar(
+          context,
+          'Left Community',
+          _ref.read(scaffoldMessengerKeyProvider),
+        );
+      } else {
+        await _communityRepository.joinCommunity(community.communityName, uid);
+        showSnackBar(
+          context,
+          'Joined Community',
+          _ref.read(scaffoldMessengerKeyProvider),
+        );
+      }
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
+
+  Stream<List<CommunityModel>> searchCommunities(String query) {
+    // For cost optimization, only search after 3 characters
+    if (query.length >= 3) {
+      return _communityRepository.searchCommunities(query);
+    } else {
+      return const Stream.empty();
     }
   }
 }

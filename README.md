@@ -66,14 +66,16 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 ## Roadmap
 
 * [x] Project Setup
+* [x] Implement UI Design
 * [x] Implement Firebase Auth for Login and Register
 * [x] Implement Firebase Firestore 
 * [x] Implement Riverpod for State Management
 * [x] Implement Authentication and Controllers 
-* [x] Implement Create Member, Create Community
+* [x] Implement Create Community
 * [x] Implement IsModerator, IsMember logic
 * [x] Implement Update Community
-* [ ] Implement UI Design
+* [x] Implement Join or Leave Community
+* [x] Implement Mod Tools
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later

@@ -9,9 +9,11 @@ class LoginTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.label,
+    required this.isEmail,
   }) : super(key: key);
   final TextEditingController controller;
   final String label;
+  final bool isEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,10 @@ class LoginTextField extends StatelessWidget {
         return Padding(
           padding: Constants.textFieldPadding,
           child: TextField(
+            keyboardType: isEmail
+                ? TextInputType.emailAddress
+                : TextInputType.visiblePassword,
+            obscureText: isEmail ? false : true,
             onTap: () {
               // Fix for keyboard overlapping the text field
               Future.delayed(const Duration(milliseconds: 530), () {

@@ -31,16 +31,13 @@ class CommunityRepository {
     }
   }
 
-  Stream<List<CommunityModel>> getCommunities(String uid) {
-    return _communityCollection
-        .where('communityMembers', arrayContains: uid)
-        .snapshots()
-        .map((event) {
-      return event.docs
-          .map(
-              (e) => CommunityModel.fromMap(e.data() as Map<String, dynamic>) //
-              )
-          .toList();
+   Stream<List<CommunityModel>> getUserCommunities(String uid) {
+    return _communityCollection.where('communityMembers', arrayContains: uid).snapshots().map((event) {
+      List<CommunityModel> communities = [];
+      for (var doc in event.docs) {
+        communities.add(CommunityModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return communities;
     });
   }
 
@@ -66,5 +63,76 @@ class CommunityRepository {
       log(e.code);
       throw e.message.toString();
     }
+  }
+
+  Future<void> joinCommunity(String communityName, String uid) async {
+    try {
+      final communityDoc = await _communityCollection.doc(communityName).get();
+      if (!communityDoc.exists) {
+        throw Exception('Community does not exists');
+      }
+      final community =
+          CommunityModel.fromMap(communityDoc.data() as Map<String, dynamic>);
+
+      if (community.communityMembers.contains(uid)) {
+        throw Exception('Already a member of the community');
+      }
+
+      final updatedCommunity = community.copyWith(
+        communityMembers: [...community.communityMembers, uid],
+      );
+
+      await _communityCollection
+          .doc(communityName)
+          .update(updatedCommunity.toMap());
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> leaveCommunity(String communityName, String uid) async {
+    try {
+      final communityDoc = await _communityCollection.doc(communityName).get();
+      if (!communityDoc.exists) {
+        throw Exception('Community does not exists');
+      }
+      final community =
+          CommunityModel.fromMap(communityDoc.data() as Map<String, dynamic>);
+
+      if (!community.communityMembers.contains(uid)) {
+        throw Exception('Not a member of the community');
+      }
+
+      final updatedCommunity = community.copyWith(
+        communityMembers: community.communityMembers
+            .where((element) => element != uid)
+            .toList(),
+      );
+
+      await _communityCollection
+          .doc(communityName)
+          .update(updatedCommunity.toMap());
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Stream<List<CommunityModel>> searchCommunities(String query) {
+    return _communityCollection
+        .where(
+          'communityName',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty ? 0 : '${query}z',
+        )
+        .snapshots()
+        .map((event) {
+      return event.docs
+          .map(
+              (e) => CommunityModel.fromMap(e.data() as Map<String, dynamic>) //
+              )
+          .toList();
+    });
   }
 }

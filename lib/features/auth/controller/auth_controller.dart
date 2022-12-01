@@ -70,10 +70,8 @@ class AuthController extends StateNotifier<bool> {
     state = false;
   }
 
-  Future<void> signOut() async {
-    state = true;
+  Future signOut() async {
     await _authRepository.signOut();
-    state = false;
   }
 
   Stream<UserModel> getUserData(String uid) {

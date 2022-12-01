@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
+import 'package:reddit_clone/features/community/controller/community_controller.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -16,6 +18,14 @@ class CommunityHeaderWidget extends StatelessWidget {
 
   void navigateToModTools(BuildContext context, String name) {
     Routemaster.of(context).push('/mod_tools/$name');
+  }
+
+  void joinCommunityOrLeave(
+      BuildContext context, WidgetRef ref, CommunityModel community) async {
+    await ref.read(communityControllerProvider.notifier).joinCommunityOrLeave(
+          community: community,
+          context: context,
+        );
   }
 
   @override
@@ -54,13 +64,23 @@ class CommunityHeaderWidget extends StatelessWidget {
                       icon: const Icon(Icons.more_horiz),
                       label: const Text("Moderate"),
                     )
-                  : OutlinedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        padding: Constants.buttonPadding,
-                      ),
-                      onPressed: () {},
-                      icon: Icon(isMember ? Icons.check_circle : Icons.add),
-                      label: Text(isMember ? "Joined" : 'Join'),
+                  : Consumer(
+                      builder: (context, ref, child) {
+                        return OutlinedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            padding: Constants.buttonPadding,
+                          ),
+                          onPressed: () {
+                            joinCommunityOrLeave(context, ref, community);
+                          },
+                          icon: Icon(
+                            isMember
+                                ? Icons.remove_circle // 
+                                : Icons.add,
+                          ),
+                          label: Text(isMember ? "Leave" : 'Join'),
+                        );
+                      },
                     ),
             ],
           ),

@@ -123,6 +123,7 @@ class AuthRepository {
 
   Future<void> signOut() async {
     await _auth.signOut();
+      
   }
 
   Stream<UserModel> getUserData(String uid) {
