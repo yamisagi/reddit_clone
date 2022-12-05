@@ -6,6 +6,8 @@ import 'package:reddit_clone/views/edit_community_view.dart';
 import 'package:reddit_clone/views/home_view.dart';
 import 'package:reddit_clone/views/login_view.dart';
 import 'package:reddit_clone/views/modtools_view.dart';
+import 'package:reddit_clone/views/profile_edit_view.dart';
+import 'package:reddit_clone/views/user_profile_view.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'util/common/loading_widget.dart';
@@ -40,6 +42,16 @@ final signedInRoute = RouteMap(routes: {
   '/add_mods/:name': (info) => MaterialPage<void>(
         child: AddModsView(
           communityName: info.pathParameters['name']!,
+        ),
+      ),
+  '/u/:uid': (info) => MaterialPage<void>(
+        child: UserProfileView(
+          uid: info.pathParameters['uid']!,
+        ),
+      ),
+  '/edit_profile/:uid': (info) => MaterialPage<void>(
+        child: EditProfileView(
+          uid: info.pathParameters['uid']!,
         ),
       ),
 });

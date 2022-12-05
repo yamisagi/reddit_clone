@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:routemaster/routemaster.dart';
 
 class UserDrawer extends ConsumerWidget {
   const UserDrawer({super.key});
@@ -33,7 +34,7 @@ class UserDrawer extends ConsumerWidget {
             ListTile(
               title: const Text('My Profile'),
               leading: const Icon(Icons.person),
-              onTap: () => null,
+              onTap: () => Routemaster.of(context).push('/u/${user.uid}'),
             ),
             ListTile(
               title: const Text('Log Out'),
