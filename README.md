@@ -76,6 +76,7 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Update Community
 * [x] Implement Join or Leave Community
 * [x] Implement Mod Tools
+* [x] Implement Add Moderator to Community
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later

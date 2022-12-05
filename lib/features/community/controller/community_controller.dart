@@ -55,7 +55,7 @@ class CommunityController extends StateNotifier<bool> {
         _ref = ref,
         _storageRepository = storageRepository,
         super(false);
-
+ 
   Future<void> createCommunity(String name, BuildContext context) async {
     state = true;
     try {
@@ -101,7 +101,7 @@ class CommunityController extends StateNotifier<bool> {
   }
 
   Stream<List<CommunityModel>> getCommunities() {
-   final uid = _ref.read(userProvider)!.uid;
+    final uid = _ref.read(userProvider)!.uid;
     return _communityRepository.getUserCommunities(uid);
   }
 
@@ -200,6 +200,29 @@ class CommunityController extends StateNotifier<bool> {
       return _communityRepository.searchCommunities(query);
     } else {
       return const Stream.empty();
+    }
+  }
+
+  Future<void> addModerator(
+      {required String communityName,
+      required List<String> uid,
+      required BuildContext context}) async {
+    try {
+      await _communityRepository.addModerator(communityName, uid);
+      showSnackBar(
+        context,
+        'Moderator Added',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+
+      Routemaster.of(context).pop();
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
     }
   }
 }

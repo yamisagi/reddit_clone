@@ -25,23 +25,23 @@ class CommunityListDrawer extends ConsumerWidget {
             ),
             ref.watch(userCommunitiesProvider).when(
                   data: (data) {
-                    // if (data.isEmpty) {
-                    //   return Padding(
-                    //     padding: EdgeInsets.only(
-                    //         top: MediaQuery.of(context).size.height * 0.4),
-                    //     child: Center(
-                    //       child: Text(
-                    //         Constants.noCommunities,
-                    //         style: Theme.of(context)
-                    //             .textTheme
-                    //             .bodyLarge //
-                    //             ?.copyWith(
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //       ),
-                    //     ),
-                    //   );
-                    // }
+                    if (data.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.4),
+                        child: Center(
+                          child: Text(
+                            Constants.noCommunities,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge //
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      );
+                    }
                     return Expanded(
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),

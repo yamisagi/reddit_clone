@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_clone/views/add_mods_view.dart';
 import 'package:reddit_clone/views/community_view.dart';
 import 'package:reddit_clone/views/create_community_view.dart';
 import 'package:reddit_clone/views/edit_community_view.dart';
@@ -33,6 +34,12 @@ final signedInRoute = RouteMap(routes: {
   '/edit_community/:name': (info) => MaterialPage<void>(
         child: EditCommunityView(
           name: info.pathParameters['name']!,
+        ),
+      ),
+
+  '/add_mods/:name': (info) => MaterialPage<void>(
+        child: AddModsView(
+          communityName: info.pathParameters['name']!,
         ),
       ),
 });

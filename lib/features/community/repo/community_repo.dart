@@ -31,11 +31,15 @@ class CommunityRepository {
     }
   }
 
-   Stream<List<CommunityModel>> getUserCommunities(String uid) {
-    return _communityCollection.where('communityMembers', arrayContains: uid).snapshots().map((event) {
+  Stream<List<CommunityModel>> getUserCommunities(String uid) {
+    return _communityCollection
+        .where('communityMembers', arrayContains: uid)
+        .snapshots()
+        .map((event) {
       List<CommunityModel> communities = [];
       for (var doc in event.docs) {
-        communities.add(CommunityModel.fromMap(doc.data() as Map<String, dynamic>));
+        communities
+            .add(CommunityModel.fromMap(doc.data() as Map<String, dynamic>));
       }
       return communities;
     });
@@ -134,5 +138,16 @@ class CommunityRepository {
               )
           .toList();
     });
+  }
+
+  Future<void> addModerator(String communityName, List<String> uid) async {
+    try {
+      await _communityCollection
+          .doc(communityName)
+          .update({'communityModerators': uid});
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
   }
 }

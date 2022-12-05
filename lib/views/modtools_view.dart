@@ -21,10 +21,10 @@ class ModToolsView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const ListTile(
-            title: Text('Add Moderator'),
-            onTap: null,
-            leading: Icon(Icons.add_moderator_outlined),
+          ListTile(
+            title: const Text('Add Moderator'),
+            onTap: () => Routemaster.of(context).push('/add_mods/$name'),
+            leading: const Icon(Icons.add_moderator_outlined),
           ),
           ListTile(
             title: const Text('Edit Community'),

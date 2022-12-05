@@ -78,7 +78,7 @@ class CommunityHeaderWidget extends StatelessWidget {
                                 ? Icons.remove_circle // 
                                 : Icons.add,
                           ),
-                          label: Text(isMember ? "Leave" : 'Join'),
+                          label: Text(isMember ? "Joined" : 'Join'),
                         );
                       },
                     ),
