@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/profile/controller/profile_controller.dart';
-import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/common/loading_widget.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_avatar_picker.dart';
@@ -84,8 +84,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
               ),
               data: (user) {
                 return Scaffold(
-                  backgroundColor:
-                      ColorPallete.darkModeAppTheme.backgroundColor,
                   appBar: AppBar(
                     elevation: 0,
                     title: const Text('Edit Profile'),
@@ -127,7 +125,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           controller: _nameController,
                           decoration: InputDecoration(
                             hintText: 'New User Name',
-                            fillColor: ColorPallete.greyColor,
+                            fillColor: ref
+                                        .read(themeNotifierProvider.notifier)
+                                        .themeMode ==
+                                    ThemeMode.dark
+                                ? Colors.grey[800]
+                                : Colors.grey[200],
                             filled: true,
                             focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(

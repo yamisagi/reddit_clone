@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
 import 'package:reddit_clone/models/community_model.dart';
-import 'package:reddit_clone/theme/product_theme.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/edit_community_view/avatar_picker.dart';
 import 'package:reddit_clone/util/edit_community_view/banner_picker.dart';
@@ -71,8 +70,6 @@ class _EditCommunityViewState extends ConsumerState<EditCommunityView> {
               ),
               data: (community) {
                 return Scaffold(
-                  backgroundColor:
-                      ColorPallete.darkModeAppTheme.backgroundColor,
                   appBar: AppBar(
                     elevation: 0,
                     title: const Text('Edit Community'),
