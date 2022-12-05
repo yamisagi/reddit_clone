@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:reddit_clone/router.dart';
-import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/common/error_widget.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -37,7 +37,7 @@ class _AppRootState extends ConsumerState<AppRoot> {
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
               title: 'Reddit Clone',
-              theme: ColorPallete.darkModeAppTheme,
+              theme: ref.watch(themeNotifierProvider),
               routerDelegate: RoutemasterDelegate(
                 routesBuilder: (context) {
                   if (data != null) {

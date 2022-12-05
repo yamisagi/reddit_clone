@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:routemaster/routemaster.dart';
 
 class UserDrawer extends ConsumerWidget {
@@ -47,13 +48,15 @@ class UserDrawer extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.light_mode,
-                  color: ColorPallete.lightModeAppTheme.backgroundColor,
-                ),
+                ref.read(themeNotifierProvider.notifier).themeMode ==
+                        ThemeMode.dark
+                    ? const Icon(Icons.wb_sunny)
+                    : const Icon(Icons.nightlight_round),
                 Switch.adaptive(
-                  value: true,
-                  onChanged: (val) => null,
+                  value: ref.watch(themeNotifierProvider.notifier).themeMode ==
+                      ThemeMode.dark,
+                  onChanged: (val) =>
+                      ref.read(themeNotifierProvider.notifier).setTheme(),
                 ),
               ],
             ),

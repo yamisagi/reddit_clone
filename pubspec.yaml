@@ -23,6 +23,7 @@ dependencies:
   routemaster: ^1.0.1
   dotted_border: ^2.0.0+3
   file_picker: ^5.2.3
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
