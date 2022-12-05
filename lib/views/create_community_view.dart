@@ -4,6 +4,7 @@ import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/common/loading_widget.dart';
 
 class CreateCommunityView extends ConsumerStatefulWidget {
@@ -58,12 +59,16 @@ class _CreateCommunityViewState extends ConsumerState<CreateCommunityView> {
                   ),
                   TextField(
                     controller: _communityNameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: Constants.communityNameHint,
                       filled: true,
-                      fillColor: ColorPallete.greyColor,
+                      fillColor:
+                          ref.read(themeNotifierProvider.notifier).themeMode ==
+                                  ThemeMode.dark
+                              ? ColorPallete.greyColor
+                              : ColorPallete.lightGreyColor,
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(10.0),
+                      contentPadding: const EdgeInsets.all(10.0),
                     ),
                     maxLength: 21,
                   ),

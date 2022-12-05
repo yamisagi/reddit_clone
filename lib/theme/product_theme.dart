@@ -7,6 +7,7 @@ class ColorPallete {
   static const whiteColor = Colors.white;
   static var redColor = Colors.red.shade500;
   static var blueColor = Colors.blue.shade300;
+  static var lightGreyColor = Colors.grey.shade300;
 
   static var darkModeAppTheme = ThemeData.dark(useMaterial3: true) //
       .copyWith(
@@ -21,8 +22,26 @@ class ColorPallete {
               color: whiteColor,
             ),
           ),
+          iconTheme: const IconThemeData(
+            color: whiteColor,
+          ),
           drawerTheme: const DrawerThemeData(
             backgroundColor: drawerColor,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: whiteColor,
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: whiteColor,
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: redColor,
+            ),
           ),
           primaryColor: redColor,
           backgroundColor: drawerColor,
@@ -39,6 +58,24 @@ class ColorPallete {
             elevation: 1,
             iconTheme: IconThemeData(
               color: blackColor,
+            ),
+          ),
+          iconTheme: const IconThemeData(
+            color: blackColor,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: blackColor,
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: blackColor,
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: redColor,
             ),
           ),
           drawerTheme: const DrawerThemeData(
