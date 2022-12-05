@@ -31,7 +31,6 @@ class ColorPallete {
   static var lightModeAppTheme = ThemeData.light(useMaterial3: true) //
       .copyWith(
           scaffoldBackgroundColor: whiteColor,
-          
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
             centerTitle: true,

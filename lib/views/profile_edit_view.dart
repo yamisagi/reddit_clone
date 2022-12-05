@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
+import 'package:reddit_clone/features/profile/controller/profile_controller.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/util/common/loading_widget.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_avatar_picker.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_banner_picker.dart';
@@ -58,79 +60,93 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     }
   }
 
+  void saveProfile() {
+    ref.read(profileControllerProvider.notifier).editProfile(
+          avatarImage: avatarImage,
+          bannerImage: bannerImage,
+          name: _nameController.text.trim(),
+          context: context,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ref.watch(getUserDataProvider(widget.uid)).when(
-          error: (error, stackTrace) => const Center(
-            child: Text('Something went wrong'),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          data: (user) {
-            return Scaffold(
-              backgroundColor: ColorPallete.darkModeAppTheme.backgroundColor,
-              appBar: AppBar(
-                elevation: 0,
-                title: const Text('Edit Profile'),
-                actions: [
-                  TextButton.icon(
-                    label: const Text('Save'),
-                    onPressed: () => null,
-                    icon: const Icon(Icons.save),
+    final isLoading = ref.watch(profileControllerProvider);
+
+    return isLoading
+        ? const LoadingWidget()
+        : ref.watch(getUserDataProvider(widget.uid)).when(
+              error: (error, stackTrace) => const Center(
+                child: Text('Something went wrong'),
+              ),
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              data: (user) {
+                return Scaffold(
+                  backgroundColor:
+                      ColorPallete.darkModeAppTheme.backgroundColor,
+                  appBar: AppBar(
+                    elevation: 0,
+                    title: const Text('Edit Profile'),
+                    actions: [
+                      TextButton.icon(
+                        label: const Text('Save'),
+                        onPressed: () => saveProfile(),
+                        icon: const Icon(Icons.save),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              body: Padding(
-                padding: Constants.smallPadding,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: Stack(
-                        children: [
-                          UserBannerPicker(
-                            bannerImage: bannerImage,
-                            user: user,
-                            func: () {
-                              selectBannerImage();
-                            },
-                          ),
-                          UserAvatarPicker(
-                            func: () {
-                              selectAvatarImage();
-                            },
-                            user: user,
-                            avatarImage: avatarImage,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        hintText: 'New User Name',
-                        fillColor: ColorPallete.greyColor,
-                        filled: true,
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
+                  body: Padding(
+                    padding: Constants.smallPadding,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          child: Stack(
+                            children: [
+                              UserBannerPicker(
+                                bannerImage: bannerImage,
+                                user: user,
+                                func: () {
+                                  selectBannerImage();
+                                },
+                              ),
+                              UserAvatarPicker(
+                                func: () {
+                                  selectAvatarImage();
+                                },
+                                user: user,
+                                avatarImage: avatarImage,
+                              ),
+                            ],
                           ),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            hintText: 'New User Name',
+                            fillColor: ColorPallete.greyColor,
+                            filled: true,
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
-          },
-        );
   }
 }

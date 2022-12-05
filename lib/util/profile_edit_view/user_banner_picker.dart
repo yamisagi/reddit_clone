@@ -53,7 +53,7 @@ class UserBannerPicker extends StatelessWidget {
                         ),
                       )
                     : Image.network(
-                        user.profilePic,
+                        user.banner,
                         fit: BoxFit.cover,
                       ),
           ),

@@ -79,6 +79,7 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Add Moderator to Community
 * [x] Implement Edit Profile Page 
 * [x] Implement User Avatar & Banner Logic
+* [x] Implement Update User Profile 
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later

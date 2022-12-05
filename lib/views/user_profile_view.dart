@@ -45,11 +45,11 @@ class UserProfileView extends ConsumerWidget {
                               ),
                               alignment: Alignment.bottomLeft,
                               child: CircleAvatar(
-                                radius: MediaQuery.of(context).size.width * 0.1,
+                                radius: MediaQuery.of(context).size.width * 0.12,
                                 backgroundImage: NetworkImage(
                                   user.profilePic,
                                 ),
-                                backgroundColor: Colors.grey,
+                                backgroundColor: Colors.transparent,
                               ),
                             ),
                             Consumer(
@@ -61,7 +61,7 @@ class UserProfileView extends ConsumerWidget {
                                     style: ElevatedButton.styleFrom(
                                       maximumSize: Size(
                                           MediaQuery.of(context).size.width *
-                                              0.25,
+                                              0.3,
                                           MediaQuery.of(context).size.height *
                                               0.05),
                                     ),
@@ -74,7 +74,7 @@ class UserProfileView extends ConsumerWidget {
                                       'Edit Profile',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodySmall
+                                          .bodyMedium
                                           ?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
