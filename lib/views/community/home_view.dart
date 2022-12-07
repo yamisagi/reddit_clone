@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit_clone/constants/widget_constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
+import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/home_view/delegates/search_delegate.dart';
 import 'package:reddit_clone/util/home_view/drawers/community_list_drawer.dart';
 import 'package:reddit_clone/util/home_view/drawers/user_drawer.dart';
 
-class HomeView extends ConsumerWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  int _page = 0;
 
   void displayCommunityListDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
@@ -16,8 +26,14 @@ class HomeView extends ConsumerWidget {
     Scaffold.of(context).openEndDrawer();
   }
 
+  void changePage(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +61,11 @@ class HomeView extends ConsumerWidget {
                 displayUserDrawer(context);
               },
               icon: CircleAvatar(
-                backgroundColor: Colors.grey,
+                backgroundColor:
+                    ref.watch(themeNotifierProvider.notifier).themeMode ==
+                            ThemeMode.dark
+                        ? ColorPallete.greyColor
+                        : ColorPallete.lightGreyColor,
                 backgroundImage: NetworkImage(user?.profilePic ?? ''),
               ),
             );
@@ -54,9 +74,24 @@ class HomeView extends ConsumerWidget {
       ),
       drawer: const CommunityListDrawer(),
       endDrawer: const UserDrawer(),
-      body: Center(
-        child: Text('User ID: ${user?.uid ?? ''}'),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        selectedItemColor: Theme.of(context).primaryColor,
+        onTap: changePage,
+        currentIndex: _page,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: '',
+          ),
+        ],
       ),
+      body: WidgetConstant.tabViews[_page],
     );
   }
 }

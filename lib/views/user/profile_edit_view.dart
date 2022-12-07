@@ -8,7 +8,6 @@ import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/profile/controller/profile_controller.dart';
 import 'package:reddit_clone/theme/theme_notifier.dart';
-import 'package:reddit_clone/util/common/loading_widget.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_avatar_picker.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_banner_picker.dart';
@@ -74,7 +73,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final isLoading = ref.watch(profileControllerProvider);
 
     return isLoading
-        ? const LoadingWidget()
+        ? const Center(child: CircularProgressIndicator())
         : ref.watch(getUserDataProvider(widget.uid)).when(
               error: (error, stackTrace) => const Center(
                 child: Text('Something went wrong'),
@@ -84,6 +83,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
               ),
               data: (user) {
                 return Scaffold(
+                  backgroundColor:
+                      ref.watch(themeNotifierProvider).scaffoldBackgroundColor,
                   appBar: AppBar(
                     elevation: 0,
                     title: const Text('Edit Profile'),

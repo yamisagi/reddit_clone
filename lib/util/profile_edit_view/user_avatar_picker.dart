@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:reddit_clone/models/user_model.dart';
+import 'package:reddit_clone/theme/product_theme.dart';
 
 class UserAvatarPicker extends StatelessWidget {
   const UserAvatarPicker({
@@ -25,10 +26,12 @@ class UserAvatarPicker extends StatelessWidget {
         onTap: func,
         child: avatarImage != null
             ? CircleAvatar(
+                backgroundColor: ColorPallete.lightGreyColor,
                 radius: MediaQuery.of(context).size.width * 0.1,
                 backgroundImage: FileImage(avatarImage!),
               )
             : CircleAvatar(
+                backgroundColor: ColorPallete.lightGreyColor,
                 radius: MediaQuery.of(context).size.width * 0.1,
                 backgroundImage: NetworkImage(user.profilePic),
               ),

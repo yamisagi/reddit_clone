@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reddit_clone/views/add_mods_view.dart';
-import 'package:reddit_clone/views/community_view.dart';
-import 'package:reddit_clone/views/create_community_view.dart';
-import 'package:reddit_clone/views/edit_community_view.dart';
-import 'package:reddit_clone/views/home_view.dart';
-import 'package:reddit_clone/views/login_view.dart';
-import 'package:reddit_clone/views/modtools_view.dart';
-import 'package:reddit_clone/views/profile_edit_view.dart';
-import 'package:reddit_clone/views/user_profile_view.dart';
+import 'package:reddit_clone/views/add_post/add_post_type_view.dart';
+import 'package:reddit_clone/views/community/add_mods_view.dart';
+import 'package:reddit_clone/views/community/community_view.dart';
+import 'package:reddit_clone/views/community/create_community_view.dart';
+import 'package:reddit_clone/views/community/edit_community_view.dart';
+import 'package:reddit_clone/views/community/home_view.dart';
+import 'package:reddit_clone/views/core/login_view.dart';
+import 'package:reddit_clone/views/community/modtools_view.dart';
+import 'package:reddit_clone/views/user/profile_edit_view.dart';
+import 'package:reddit_clone/views/user/user_profile_view.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'util/common/loading_widget.dart';
@@ -52,6 +53,11 @@ final signedInRoute = RouteMap(routes: {
   '/edit_profile/:uid': (info) => MaterialPage<void>(
         child: EditProfileView(
           uid: info.pathParameters['uid']!,
+        ),
+      ),
+  '/add_post/:type': (info) => MaterialPage<void>(
+        child: AddPostTypeView(
+          type: info.pathParameters['type']!,
         ),
       ),
 });

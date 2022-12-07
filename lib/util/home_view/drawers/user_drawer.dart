@@ -20,6 +20,11 @@ class UserDrawer extends ConsumerWidget {
         child: Column(
           children: [
             CircleAvatar(
+              backgroundColor:
+                  ref.watch(themeNotifierProvider.notifier).themeMode ==
+                          ThemeMode.dark
+                      ? ColorPallete.greyColor
+                      : ColorPallete.lightGreyColor,
               backgroundImage: NetworkImage(user.profilePic),
               radius: MediaQuery.of(context).size.width * 0.15,
             ),

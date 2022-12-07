@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
-import 'package:reddit_clone/views/login_view.dart';
+import 'package:reddit_clone/views/core/login_view.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
 
 class LoginTextField extends StatelessWidget {

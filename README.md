@@ -82,6 +82,8 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Update User Profile
 * [x] Implement Shared Preferences for Theme 
 * [x] Implement Dark & Light Theme
+* [x] Implement Post Repository & Controller
+* [x] Implement Share Post to Community 
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later
