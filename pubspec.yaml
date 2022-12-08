@@ -43,10 +43,10 @@ flutter:
     - assets/images/
 
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: RedditFont
+      fonts:
+        - asset: assets/fonts/RedditFont.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -44,4 +44,57 @@ class PostRepository {
       throw e.message.toString();
     }
   }
+
+  Future<void> deletePost(Post post) async {
+    try {
+      await _postsCollection.doc(post.id).delete();
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> upvotePost(Post post, String userId) async {
+    try {
+      if (post.downVotes.contains(userId)) {
+        await _postsCollection.doc(post.id).update({
+          'downVotes': FieldValue.arrayRemove([userId])
+        });
+      }
+      if (post.upVotes.contains(userId)) {
+        await _postsCollection.doc(post.id).update({
+          'upVotes': FieldValue.arrayRemove([userId])
+        });
+      } else {
+        await _postsCollection.doc(post.id).update({
+          'upVotes': FieldValue.arrayUnion([userId])
+        });
+      }
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> downvotePost(Post post, String userId) async {
+    try {
+      if (post.upVotes.contains(userId)) {
+        await _postsCollection.doc(post.id).update({
+          'upVotes': FieldValue.arrayRemove([userId])
+        });
+      }
+      if (post.downVotes.contains(userId)) {
+        await _postsCollection.doc(post.id).update({
+          'downVotes': FieldValue.arrayRemove([userId])
+        });
+      } else {
+        await _postsCollection.doc(post.id).update({
+          'downVotes': FieldValue.arrayUnion([userId])
+        });
+      }
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
 }

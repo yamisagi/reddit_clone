@@ -198,4 +198,60 @@ class PostController extends StateNotifier<bool> {
     }
     return const Stream.empty();
   }
+
+  Future<void> deletePost(BuildContext context, Post post) async {
+    try {
+      await _postRepository.deletePost(post);
+      showSnackBar(
+        context,
+        'Post deleted',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
+
+  Future<void> upvotePost(BuildContext context, Post post) async {
+    final uid = _ref.read(userProvider)!.uid;
+    try {
+      await _postRepository.upvotePost(post, uid);
+      showSnackBar(
+        context,
+        'Upvoted',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
+
+  Future<void> downvotePost(BuildContext context, Post post) async {
+    final uid = _ref.read(userProvider)!.uid;
+    try {
+      await _postRepository.downvotePost(post, uid);
+      showSnackBar(
+        context,
+        'Downvoted',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
 }

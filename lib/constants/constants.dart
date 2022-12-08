@@ -15,6 +15,22 @@ class Constants {
   static const communityName = 'Community Name';
   static const communityNameHint = 'r/Cool_Community';
   static const noCommunities = 'No communities :/';
+
+  static const IconData up = IconData(0xe800, fontFamily: 'RedditFont', fontPackage: null);
+  static const IconData down = IconData(0xe801, fontFamily: 'RedditFont', fontPackage: null);
+
+  static const awardsPath = 'assets/images/awards';
+
+  static const awards = {
+    'awesomeAns': '${Constants.awardsPath}/awesomeanswer.png',
+    'gold': '${Constants.awardsPath}/gold.png',
+    'platinum': '${Constants.awardsPath}/platinum.png',
+    'helpful': '${Constants.awardsPath}/helpful.png',
+    'plusone': '${Constants.awardsPath}/plusone.png',
+    'rocket': '${Constants.awardsPath}/rocket.png',
+    'thankyou': '${Constants.awardsPath}/thankyou.png',
+    'til': '${Constants.awardsPath}/til.png',
+  };
   // ----------------RADIUS&&STYLE----------------
 
   static final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
@@ -41,7 +57,7 @@ class Constants {
   static const regularPadding = EdgeInsets.all(16.0);
   static const smallPadding = EdgeInsets.all(8.0);
   static final postCardPadding =
-      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0)
+      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0)
           .copyWith(right: 0.0);
   static const buttonPadding = EdgeInsets.symmetric(horizontal: 16.0);
 }

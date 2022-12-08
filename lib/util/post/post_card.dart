@@ -1,7 +1,9 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
+import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
 import 'package:reddit_clone/theme/theme_notifier.dart';
@@ -9,6 +11,18 @@ import 'package:reddit_clone/theme/theme_notifier.dart';
 class PostCardWidget extends ConsumerWidget {
   const PostCardWidget(this.post, {super.key});
   final Post post;
+
+  Future<void> deletePost(BuildContext context, WidgetRef ref) async {
+    await ref.read(postControllerProvider.notifier).deletePost(context, post);
+  }
+
+  Future<void> upvotePost(BuildContext context, WidgetRef ref) async {
+    await ref.read(postControllerProvider.notifier).upvotePost(context, post);
+  }
+
+  Future<void> downvotePost(BuildContext context, WidgetRef ref) async {
+    await ref.read(postControllerProvider.notifier).downvotePost(context, post);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,7 +96,9 @@ class PostCardWidget extends ConsumerWidget {
                               ),
                               if (post.uid == user?.uid)
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await deletePost(context, ref);
+                                  },
                                   icon: const Icon(Icons.delete),
                                   color: ColorPallete.redColor,
                                 ),
@@ -90,7 +106,7 @@ class PostCardWidget extends ConsumerWidget {
                           ),
                           const Divider(
                             color: ColorPallete.greyColor,
-                            thickness: 3,
+                            thickness: 1,
                           ),
                           Padding(
                             padding: Constants.regularPadding,
@@ -110,12 +126,86 @@ class PostCardWidget extends ConsumerWidget {
                               width: MediaQuery.of(context).size.width,
                               child: Image.network(
                                 post.link ?? user!.profilePic,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
-
-                          // TODO: Add Type Link and Type Text Here
-                          // TODO: And clean up the code that look sick
+                          if (isTypeLink)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: AnyLinkPreview(
+                                  displayDirection:
+                                      UIDirection.uiDirectionVertical,
+                                  link: post.link!,
+                                ),
+                              ),
+                            ),
+                          if (isTypeText)
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: Constants.regularPadding,
+                                child: Text(post.body!,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                    iconSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    onPressed: () async {
+                                      await upvotePost(context, ref);
+                                    },
+                                    icon: const Icon(Constants.up),
+                                    color: post.upVotes.contains(user!.uid)
+                                        ? ColorPallete.redColor
+                                        : null,
+                                  ),
+                                  Text(
+                                      '${post.upVotes.length - post.downVotes.length == 0 ? 'Vote' : post.upVotes.length - post.downVotes.length}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                  IconButton(
+                                    iconSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    onPressed: () async {
+                                      await downvotePost(context, ref);
+                                    },
+                                    icon: const Icon(Constants.down),
+                                    color: post.downVotes.contains(user.uid)
+                                        ? ColorPallete.blueColor
+                                        : null,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    iconSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.comment),
+                                  ),
+                                  Text(
+                                      '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ],
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     )
