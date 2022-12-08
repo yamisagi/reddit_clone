@@ -4,12 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
-import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
-import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/theme/theme_notifier.dart';
-import 'package:reddit_clone/util/common/snackbar.dart';
+import 'package:reddit_clone/util/add_post_view/share_post_func.dart';
 import 'package:reddit_clone/util/post/post_image_widget.dart';
 import 'package:reddit_clone/util/post/post_text_widget.dart';
 
@@ -53,46 +51,6 @@ class _AddPostTypeViewState extends ConsumerState<AddPostTypeView> {
     super.deactivate();
   }
 
-  Future<void> sharePost(BuildContext context) async {
-    if (widget.type == 'image' &&
-        bannerImage != null &&
-        selectedCommunity != null &&
-        _titleController.text.isNotEmpty) {
-      await ref.read(postControllerProvider.notifier).postImage(
-            context: context,
-            title: _titleController.text.trim(),
-            selectedCommunity: selectedCommunity ?? communities.first,
-            image: bannerImage!,
-          );
-    } else if (widget.type == 'text' &&
-        selectedCommunity != null &&
-        _titleController.text.isNotEmpty) {
-      await ref.read(postControllerProvider.notifier).postText(
-            context: context,
-            title: _titleController.text.trim(),
-            description: _bodyController.text.trim(),
-            selectedCommunity: selectedCommunity ?? communities.first,
-          );
-    } else if (widget.type == 'link' &&
-        selectedCommunity != null &&
-        _titleController.text.isNotEmpty &&
-        _linkController.text.isNotEmpty) {
-      await ref.read(postControllerProvider.notifier).postLink(
-            context: context,
-            title: _titleController.text.trim(),
-            link: _linkController.text.trim(),
-            selectedCommunity: selectedCommunity ?? communities.first,
-          );
-    } else {
-      showSnackBar(
-          context,
-          'Something went wrong',
-          ref.read(
-            scaffoldMessengerKeyProvider,
-          ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isTypeImage = widget.type == 'image';
@@ -107,7 +65,17 @@ class _AddPostTypeViewState extends ConsumerState<AddPostTypeView> {
           TextButton.icon(
             label: const Text('Post'),
             onPressed: () async {
-              await sharePost(context);
+              await sharePost(
+                context,
+                ref,
+                selectedCommunity: selectedCommunity,
+                titleController: _titleController,
+                bodyController: _bodyController,
+                linkController: _linkController,
+                communities: communities,
+                bannerImage: bannerImage,
+                type: widget.type,
+              );
             },
             icon: const Icon(Icons.share),
           ),

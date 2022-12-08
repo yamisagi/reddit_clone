@@ -25,6 +25,12 @@ final postControllerProvider =
   );
 });
 
+final fetchPostsProvider =
+    StreamProvider.family(((ref, List<CommunityModel> communities) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchUserPosts(communities);
+}));
+
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
   final Ref _ref;
@@ -54,7 +60,7 @@ class PostController extends StateNotifier<bool> {
       body: description,
       communityName: selectedCommunity.communityName,
       communityProfileImg: selectedCommunity.communityAvatar,
-      author: user.profilePic,
+      author: user.name,
       upVotes: [],
       downVotes: [],
       commentCount: 0,
@@ -72,8 +78,7 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context)
-          .push('/r/${selectedCommunity.communityName}');
+      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -101,13 +106,13 @@ class PostController extends StateNotifier<bool> {
       link: link,
       communityName: selectedCommunity.communityName,
       communityProfileImg: selectedCommunity.communityAvatar,
-      author: user.profilePic,
+      author: user.name,
       upVotes: [],
       downVotes: [],
       commentCount: 0,
       awards: [],
       uid: user.uid,
-      type: 'text',
+      type: 'link',
       createdAt: DateTime.now(),
     );
 
@@ -119,8 +124,7 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context)
-          .push('/r/${selectedCommunity.communityName}');
+      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -161,13 +165,13 @@ class PostController extends StateNotifier<bool> {
         link: imageRes,
         communityName: selectedCommunity.communityName,
         communityProfileImg: selectedCommunity.communityAvatar,
-        author: user.profilePic,
+        author: user.name,
         upVotes: [],
         downVotes: [],
         commentCount: 0,
         awards: [],
         uid: user.uid,
-        type: 'text',
+        type: 'image',
         createdAt: DateTime.now(),
       );
       await _postRepository.addPost(post);
@@ -177,8 +181,7 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context)
-          .push('/r/${selectedCommunity.communityName}');
+      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -187,5 +190,12 @@ class PostController extends StateNotifier<bool> {
         _ref.read(scaffoldMessengerKeyProvider),
       );
     }
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<CommunityModel> communityName) {
+    if (communityName.isNotEmpty) {
+      return _postRepository.fetchPosts(communityName);
+    }
+    return const Stream.empty();
   }
 }

@@ -40,6 +40,8 @@ class Constants {
   static const textFieldPadding = EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0);
   static const regularPadding = EdgeInsets.all(16.0);
   static const smallPadding = EdgeInsets.all(8.0);
-
+  static final postCardPadding =
+      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0)
+          .copyWith(right: 0.0);
   static const buttonPadding = EdgeInsets.symmetric(horizontal: 16.0);
 }

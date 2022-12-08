@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
@@ -96,15 +95,15 @@ class Post {
       body: map['body'] != null ? map['body'] as String : null,
       communityName: map['communityName'] as String,
       communityProfileImg: map['communityProfileImg'] as String,
-      upVotes: List<String>.from(map['upVotes'] as List<String>),
-      downVotes: List<String>.from(map['downVotes'] as List<String>),
+      upVotes: List.from(map['upVotes'] as List),
+      downVotes: List.from(map['downVotes'] as List),
       commentCount: map['commentCount'] as int,
       author: map['author'] as String,
       uid: map['uid'] as String,
       type: map['type'] as String,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      awards: List<String>.from(
-        (map['awards'] as List<String>),
+      awards: List.from(
+        (map['awards'] as List),
       ),
     );
   }

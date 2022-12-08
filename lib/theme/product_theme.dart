@@ -15,9 +15,9 @@ class ColorPallete {
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
             centerTitle: true,
-            scrolledUnderElevation: 1,
-            elevation: 1,
-            backgroundColor: drawerColor,
+            scrolledUnderElevation: 0,
+            elevation: 0,
+            backgroundColor: blackColor,
             iconTheme: IconThemeData(
               color: whiteColor,
             ),
@@ -53,9 +53,9 @@ class ColorPallete {
           cardColor: greyColor,
           appBarTheme: const AppBarTheme(
             centerTitle: true,
-            scrolledUnderElevation: 1,
+            scrolledUnderElevation: 0,
             backgroundColor: whiteColor,
-            elevation: 1,
+            elevation: 0,
             iconTheme: IconThemeData(
               color: blackColor,
             ),
