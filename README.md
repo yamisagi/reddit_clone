@@ -88,6 +88,7 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Upvote & Downvote Logic
 * [x] Create Comment Model
 * [x] Implement Add Comment Logic & Comment Page
+* [x] Implement Karma System
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later

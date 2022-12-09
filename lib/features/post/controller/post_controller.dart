@@ -7,10 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/post/repo/post_repo.dart';
+import 'package:reddit_clone/features/profile/controller/profile_controller.dart';
 import 'package:reddit_clone/models/comment_model.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/providers/storage_repo_provider.dart';
+import 'package:reddit_clone/util/common/enums.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
@@ -34,6 +36,9 @@ final fetchPostsProvider =
 
 final getPostByIdProvider = StreamProvider.family((ref, String postId) {
   return ref.watch(postControllerProvider.notifier).getPostDetailbyId(postId);
+});
+final getCommentsByIdProvider = StreamProvider.family((ref, String postId) {
+  return ref.watch(postControllerProvider.notifier).getComments(postId);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -83,6 +88,9 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
+      await _ref
+          .read(profileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.textPost);
       Routemaster.of(context).pop();
     } on Exception catch (e) {
       log(e.toString());
@@ -129,6 +137,10 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
+
+      await _ref
+          .read(profileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.linkPost);
       Routemaster.of(context).pop();
     } on Exception catch (e) {
       log(e.toString());
@@ -186,7 +198,10 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
+      await _ref
+          .read(profileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.imagePost);
+      Routemaster.of(context).pop();
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -207,6 +222,10 @@ class PostController extends StateNotifier<bool> {
   Future<void> deletePost(BuildContext context, Post post) async {
     try {
       await _postRepository.deletePost(post);
+
+      await _ref
+          .read(profileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.deletePost);
       showSnackBar(
         context,
         'Post deleted',
@@ -281,6 +300,11 @@ class PostController extends StateNotifier<bool> {
         createdAt: DateTime.now(),
       );
       await _postRepository.addComment(newComment);
+
+      await _ref
+          .read(profileControllerProvider.notifier)
+          .updateUserKarma(UserKarma.comment);
+
       showSnackBar(
         context,
         'Comment added',
@@ -294,5 +318,9 @@ class PostController extends StateNotifier<bool> {
         _ref.read(scaffoldMessengerKeyProvider),
       );
     }
+  }
+
+  Stream<List<Comment>> getComments(String postId) {
+    return _postRepository.getComments(postId);
   }
 }

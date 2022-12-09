@@ -115,6 +115,24 @@ class PostRepository {
   Future<void> addComment(Comment comment) async {
     try {
       await _commentsCollection.doc(comment.id).set(comment.toMap());
+      // And update the post's comment count
+      await _postsCollection.doc(comment.postId).update({
+        'commentCount': FieldValue.increment(1),
+      });
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+  Stream<List<Comment>> getComments(String postId) {
+    try {
+      return _commentsCollection
+          .where('postId', isEqualTo: postId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => Comment.fromMap(doc.data() as Map<String, dynamic>))
+              .toList());
     } on FirebaseException catch (e) {
       log(e.code);
       throw e.message.toString();

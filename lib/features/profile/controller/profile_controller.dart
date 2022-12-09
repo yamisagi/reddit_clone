@@ -10,6 +10,7 @@ import 'package:reddit_clone/features/profile/repo/profile_repo.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:reddit_clone/providers/storage_repo_provider.dart';
+import 'package:reddit_clone/util/common/enums.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -110,5 +111,16 @@ class ProfileController extends StateNotifier<bool> {
 
   Stream<List<Post>> getUserPosts(String uid) {
     return _profileRepository.getUserPosts(uid);
+  }
+
+  Future<void> updateUserKarma(UserKarma userKarma) async {
+    try {
+      final user = _ref.read(userProvider)!;
+      final updatedUser = user.copyWith(karma: user.karma + userKarma.karma);
+      await _profileRepository.updateUserKarma(updatedUser);
+      _ref.read(userProvider.notifier).update((state) => updatedUser);
+    } on Exception catch (e) {
+      log(e.toString());
+    }
   }
 }

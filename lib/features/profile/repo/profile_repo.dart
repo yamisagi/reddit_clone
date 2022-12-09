@@ -49,4 +49,15 @@ class ProfileRepository {
       throw e.message.toString();
     }
   }
+
+  Future<void> updateUserKarma(UserModel userModel) async {
+    try {
+      await _userCollection.doc(userModel.uid).update({
+        'karma': userModel.karma,
+      });
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
 }

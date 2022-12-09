@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/post_model.dart';
+import 'package:reddit_clone/util/post/comment_card.dart';
 import 'package:reddit_clone/util/post/post_card.dart';
 
 class CommentView extends ConsumerStatefulWidget {
@@ -21,8 +22,12 @@ class _CommentViewState extends ConsumerState<CommentView> {
 
   Future<void> addComment(BuildContext context, Post post) async {
     await ref
-        .read(postControllerProvider.notifier)
-        .addComment(context, comment: commentController.text, post: post);
+        .read(postControllerProvider.notifier) //
+        .addComment(
+          context,
+          comment: commentController.text.trim(),
+          post: post,
+        );
     commentController.clear();
   }
 
@@ -43,6 +48,7 @@ class _CommentViewState extends ConsumerState<CommentView> {
             loading: () => const Center(child: CircularProgressIndicator()),
             data: (post) {
               return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     PostCardWidget(post),
@@ -70,6 +76,29 @@ class _CommentViewState extends ConsumerState<CommentView> {
                           filled: true,
                         ),
                       ),
+                    ),
+                    Container(
+                      child: ref.watch(getCommentsByIdProvider(post.id)).when(
+                            error: (error, stack) => Text(error.toString()),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            data: (comments) {
+                              return SingleChildScrollView(
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: comments.length,
+                                  itemBuilder: (context, index) {
+                                    final comment = comments[index];
+                                    return CommentCardWidget(
+                                      comment: comment,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                     )
                   ],
                 ),

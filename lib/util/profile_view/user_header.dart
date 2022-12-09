@@ -14,7 +14,6 @@ class UserProfileHeader extends StatelessWidget {
     return SliverList(
       delegate: SliverChildListDelegate(
         [
-          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -35,7 +34,7 @@ class UserProfileHeader extends StatelessWidget {
           ),
           const Padding(padding: Constants.smallPadding),
           const Divider(
-            thickness: 5,
+            thickness: 2,
           ),
         ],
       ),

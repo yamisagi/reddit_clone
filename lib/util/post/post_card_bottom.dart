@@ -76,8 +76,10 @@ class PostCardBottomWidget extends ConsumerWidget {
                   size: MediaQuery.of(context).size.width * 0.05,
                   Icons.comment),
               SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-              Text('${post.commentCount == 0 ? 'Comment' : post.commentCount}',
-                  style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ],
           ),
         ),
