@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/profile/repo/profile_repo.dart';
+import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/models/user_model.dart';
 import 'package:reddit_clone/providers/storage_repo_provider.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
@@ -21,6 +22,10 @@ final profileControllerProvider =
     ref: ref,
     storageRepository: storageRepo,
   );
+});
+
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  return ref.watch(profileControllerProvider.notifier).getUserPosts(uid);
 });
 
 class ProfileController extends StateNotifier<bool> {
@@ -101,5 +106,9 @@ class ProfileController extends StateNotifier<bool> {
         _ref.read(scaffoldMessengerKeyProvider),
       );
     }
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _profileRepository.getUserPosts(uid);
   }
 }

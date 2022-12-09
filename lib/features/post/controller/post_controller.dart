@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/post/repo/post_repo.dart';
+import 'package:reddit_clone/models/comment_model.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/providers/storage_repo_provider.dart';
@@ -30,6 +31,10 @@ final fetchPostsProvider =
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchUserPosts(communities);
 }));
+
+final getPostByIdProvider = StreamProvider.family((ref, String postId) {
+  return ref.watch(postControllerProvider.notifier).getPostDetailbyId(postId);
+});
 
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
@@ -78,7 +83,7 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
+      Routemaster.of(context).pop();
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -124,7 +129,7 @@ class PostController extends StateNotifier<bool> {
         'Posted to ${selectedCommunity.communityName}',
         _ref.read(scaffoldMessengerKeyProvider),
       );
-      Routemaster.of(context).push('/r/${selectedCommunity.communityName}');
+      Routemaster.of(context).pop();
     } on Exception catch (e) {
       log(e.toString());
       showSnackBar(
@@ -243,6 +248,42 @@ class PostController extends StateNotifier<bool> {
       showSnackBar(
         context,
         'Downvoted',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
+
+  Stream<Post> getPostDetailbyId(String id) {
+    return _postRepository.getPostDetailbyId(id);
+  }
+
+  Future<void> addComment(
+    BuildContext context, {
+    required String comment,
+    required Post post,
+  }) async {
+    try {
+      final user = _ref.read(userProvider)!;
+      String commentId = const Uuid().v4();
+      Comment newComment = Comment(
+        username: user.name,
+        profilePicUrl: user.profilePic,
+        id: commentId,
+        text: comment,
+        postId: post.id,
+        createdAt: DateTime.now(),
+      );
+      await _postRepository.addComment(newComment);
+      showSnackBar(
+        context,
+        'Comment added',
         _ref.read(scaffoldMessengerKeyProvider),
       );
     } on Exception catch (e) {

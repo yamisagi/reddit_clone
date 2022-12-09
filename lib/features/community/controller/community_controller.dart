@@ -9,6 +9,7 @@ import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/community/repo/community_repo.dart';
 import 'package:reddit_clone/models/community_model.dart';
+import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/providers/storage_repo_provider.dart';
 import 'package:reddit_clone/util/common/snackbar.dart';
 import 'package:routemaster/routemaster.dart';
@@ -17,6 +18,13 @@ import 'package:routemaster/routemaster.dart';
 final userCommunitiesProvider = StreamProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getCommunities();
+});
+
+final getCommunityPostsProvider =
+    StreamProvider.family((ref, String communityName) {
+  return ref
+      .watch(communityControllerProvider.notifier)
+      .getCommunityPosts(communityName);
 });
 
 final communityControllerProvider =
@@ -55,7 +63,7 @@ class CommunityController extends StateNotifier<bool> {
         _ref = ref,
         _storageRepository = storageRepository,
         super(false);
- 
+
   Future<void> createCommunity(String name, BuildContext context) async {
     state = true;
     try {
@@ -224,5 +232,9 @@ class CommunityController extends StateNotifier<bool> {
         _ref.read(scaffoldMessengerKeyProvider),
       );
     }
+  }
+
+  Stream<List<Post>> getCommunityPosts(String communityName) {
+    return _communityRepository.getCommunityPosts(communityName);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_clone/views/add_post/add_post_type_view.dart';
+import 'package:reddit_clone/views/comment/comment_view.dart';
 import 'package:reddit_clone/views/community/add_mods_view.dart';
 import 'package:reddit_clone/views/community/community_view.dart';
 import 'package:reddit_clone/views/community/create_community_view.dart';
@@ -58,6 +59,11 @@ final signedInRoute = RouteMap(routes: {
   '/add_post/:type': (info) => MaterialPage<void>(
         child: AddPostTypeView(
           type: info.pathParameters['type']!,
+        ),
+      ),
+  '/comments/:postId': (info) => MaterialPage<void>(
+        child: CommentView(
+          postId: info.pathParameters['postId']!,
         ),
       ),
 });

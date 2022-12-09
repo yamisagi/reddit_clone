@@ -3,6 +3,7 @@ import 'dart:developer' show log;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/firebase_constants.dart';
+import 'package:reddit_clone/models/comment_model.dart';
 import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/providers/firebase_providers.dart';
@@ -19,6 +20,8 @@ class PostRepository {
 
   CollectionReference get _postsCollection =>
       _firestore.collection(FirebaseConstants.postsCollection);
+  CollectionReference get _commentsCollection =>
+      _firestore.collection(FirebaseConstants.commentsCollection);
 
   Future<void> addPost(Post post) async {
     try {
@@ -92,6 +95,26 @@ class PostRepository {
           'downVotes': FieldValue.arrayUnion([userId])
         });
       }
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Stream<Post> getPostDetailbyId(String id) {
+    try {
+      return _postsCollection.doc(id).snapshots().map((snapshot) {
+        return Post.fromMap(snapshot.data() as Map<String, dynamic>);
+      });
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> addComment(Comment comment) async {
+    try {
+      await _commentsCollection.doc(comment.id).set(comment.toMap());
     } on FirebaseException catch (e) {
       log(e.code);
       throw e.message.toString();

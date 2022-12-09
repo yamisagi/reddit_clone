@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/community/controller/community_controller.dart';
 import 'package:reddit_clone/models/community_model.dart';
+import 'package:reddit_clone/theme/product_theme.dart';
+import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:routemaster/routemaster.dart';
 
 class CommunityHeaderWidget extends StatelessWidget {
@@ -54,28 +56,46 @@ class CommunityHeaderWidget extends StatelessWidget {
                     ),
               ),
               isModerator
-                  ? OutlinedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        padding: Constants.buttonPadding,
+                  ? Consumer(
+                      builder: (context, ref, child) => OutlinedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          padding: Constants.buttonPadding,
+                          side: BorderSide(
+                            color: ref
+                                        .watch(themeNotifierProvider.notifier)
+                                        .themeMode ==
+                                    ThemeMode.dark
+                                ? ColorPallete.whiteColor
+                                : ColorPallete.blackColor,
+                          ),
+                        ),
+                        onPressed: () {
+                          navigateToModTools(context, community.communityName);
+                        },
+                        icon: const Icon(Icons.more_horiz),
+                        label: const Text("Moderate"),
                       ),
-                      onPressed: () {
-                        navigateToModTools(context, community.communityName);
-                      },
-                      icon: const Icon(Icons.more_horiz),
-                      label: const Text("Moderate"),
                     )
                   : Consumer(
                       builder: (context, ref, child) {
                         return OutlinedButton.icon(
                           style: ElevatedButton.styleFrom(
                             padding: Constants.buttonPadding,
+                            side: BorderSide(
+                              color: ref
+                                          .watch(themeNotifierProvider.notifier)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? ColorPallete.whiteColor
+                                  : ColorPallete.blackColor,
+                            ),
                           ),
                           onPressed: () {
                             joinCommunityOrLeave(context, ref, community);
                           },
                           icon: Icon(
                             isMember
-                                ? Icons.remove_circle // 
+                                ? Icons.remove_circle //
                                 : Icons.add,
                           ),
                           label: Text(isMember ? "Joined" : 'Join'),

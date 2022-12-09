@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/firebase_constants.dart';
 import 'package:reddit_clone/models/community_model.dart';
+import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/providers/firebase_providers.dart';
 
 final communityRepoProvider = Provider<CommunityRepository>((ref) {
@@ -52,6 +53,8 @@ class CommunityRepository {
 
   CollectionReference get _communityCollection =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
+  CollectionReference get _postCollection =>
+      FirebaseFirestore.instance.collection(FirebaseConstants.postsCollection);
 
   Future editCommunity(CommunityModel community) async {
     try {
@@ -145,6 +148,23 @@ class CommunityRepository {
       await _communityCollection
           .doc(communityName)
           .update({'communityModerators': uid});
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Stream<List<Post>> getCommunityPosts(String communityName) {
+    try {
+      return _postCollection
+          .where('communityName', isEqualTo: communityName)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs
+            .map((doc) => Post.fromMap(doc.data() as Map<String, dynamic>))
+            .toList();
+      });
     } on FirebaseException catch (e) {
       log(e.code);
       throw e.message.toString();

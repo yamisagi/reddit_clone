@@ -85,6 +85,9 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Post Repository & Controller
 * [x] Implement Share Post to Community 
 * [x] Implement Feed Page & Post Card
+* [x] Implement Upvote & Downvote Logic
+* [x] Create Comment Model
+* [x] Implement Add Comment Logic & Comment Page
 * [ ] Implement Animations
 * [ ] Implement Unit Testing
 * I will update this later

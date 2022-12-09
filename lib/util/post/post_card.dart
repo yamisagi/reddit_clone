@@ -3,26 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
-import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/theme/product_theme.dart';
 import 'package:reddit_clone/theme/theme_notifier.dart';
+import 'package:reddit_clone/util/post/post_card_bottom.dart';
+import 'package:reddit_clone/util/post/post_header.dart';
 
 class PostCardWidget extends ConsumerWidget {
   const PostCardWidget(this.post, {super.key});
   final Post post;
-
-  Future<void> deletePost(BuildContext context, WidgetRef ref) async {
-    await ref.read(postControllerProvider.notifier).deletePost(context, post);
-  }
-
-  Future<void> upvotePost(BuildContext context, WidgetRef ref) async {
-    await ref.read(postControllerProvider.notifier).upvotePost(context, post);
-  }
-
-  Future<void> downvotePost(BuildContext context, WidgetRef ref) async {
-    await ref.read(postControllerProvider.notifier).downvotePost(context, post);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +23,15 @@ class PostCardWidget extends ConsumerWidget {
     return Column(
       children: [
         Container(
+          margin: Constants.smallPadding,
           decoration: BoxDecoration(
+            border: Border.all(
+              color: currentTheme.themeMode == ThemeMode.dark
+                  ? ColorPallete.darkModeAppTheme.cardColor
+                  : ColorPallete.lightGreyColor,
+            ),
+            borderRadius: Constants.rectRadius,
+            shape: BoxShape.rectangle,
             color: currentTheme.themeMode == ThemeMode.dark
                 ? ColorPallete.darkModeAppTheme.backgroundColor
                 : ColorPallete.lightGreyColor,
@@ -48,62 +45,9 @@ class PostCardWidget extends ConsumerWidget {
                     Container(
                       padding: Constants.postCardPadding,
                       child: Column(
-                        //
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(post.communityProfileImg),
-                                    radius: MediaQuery.of(context).size.width *
-                                        0.05,
-                                  ),
-                                  Padding(
-                                    padding: Constants.postCardPadding,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '/r/${post.communityName}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        Text(
-                                          'u/${post.author}',
-                                          maxLines: 1,
-                                          textAlign: TextAlign.start,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              if (post.uid == user?.uid)
-                                IconButton(
-                                  onPressed: () async {
-                                    await deletePost(context, ref);
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                  color: ColorPallete.redColor,
-                                ),
-                            ],
-                          ),
+                          PostHeaderWidget(post: post, user: user!),
                           const Divider(
                             color: ColorPallete.greyColor,
                             thickness: 1,
@@ -125,7 +69,7 @@ class PostCardWidget extends ConsumerWidget {
                               height: MediaQuery.of(context).size.height * 0.3,
                               width: MediaQuery.of(context).size.width,
                               child: Image.network(
-                                post.link ?? user!.profilePic,
+                                post.link ?? user.profilePic,
                                 fit: BoxFit.fitHeight,
                               ),
                             ),
@@ -152,60 +96,7 @@ class PostCardWidget extends ConsumerWidget {
                                         Theme.of(context).textTheme.bodyMedium),
                               ),
                             ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    iconSize:
-                                        MediaQuery.of(context).size.width *
-                                            0.05,
-                                    onPressed: () async {
-                                      await upvotePost(context, ref);
-                                    },
-                                    icon: const Icon(Constants.up),
-                                    color: post.upVotes.contains(user!.uid)
-                                        ? ColorPallete.redColor
-                                        : null,
-                                  ),
-                                  Text(
-                                      '${post.upVotes.length - post.downVotes.length == 0 ? 'Vote' : post.upVotes.length - post.downVotes.length}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
-                                  IconButton(
-                                    iconSize:
-                                        MediaQuery.of(context).size.width *
-                                            0.05,
-                                    onPressed: () async {
-                                      await downvotePost(context, ref);
-                                    },
-                                    icon: const Icon(Constants.down),
-                                    color: post.downVotes.contains(user.uid)
-                                        ? ColorPallete.blueColor
-                                        : null,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    iconSize:
-                                        MediaQuery.of(context).size.width *
-                                            0.05,
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.comment),
-                                  ),
-                                  Text(
-                                      '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
-                                ],
-                              ),
-                            ],
-                          )
+                          PostCardBottomWidget(post: post, user: user),
                         ],
                       ),
                     )
