@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,7 +50,9 @@ class PostCardBottomWidget extends ConsumerWidget {
         Row(
           children: [
             IconButton(
-              iconSize: MediaQuery.of(context).size.width * 0.05,
+              iconSize: kIsWeb
+                  ? MediaQuery.of(context).size.height * 0.03
+                  : MediaQuery.of(context).size.width * 0.05,
               onPressed: () async {
                 await upvotePost(context, ref);
               },
@@ -62,7 +65,9 @@ class PostCardBottomWidget extends ConsumerWidget {
                 '${post.upVotes.length - post.downVotes.length == 0 ? 'Vote' : post.upVotes.length - post.downVotes.length}',
                 style: Theme.of(context).textTheme.bodyMedium),
             IconButton(
-              iconSize: MediaQuery.of(context).size.width * 0.05,
+              iconSize: kIsWeb
+                  ? MediaQuery.of(context).size.height * 0.03
+                  : MediaQuery.of(context).size.width * 0.05,
               onPressed: () async {
                 await downvotePost(context, ref);
               },
@@ -80,9 +85,12 @@ class PostCardBottomWidget extends ConsumerWidget {
           child: Row(
             children: [
               Icon(
-                  size: MediaQuery.of(context).size.width * 0.05,
+                  size: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.03
+                      : MediaQuery.of(context).size.width * 0.05,
                   Icons.comment),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+              SizedBox(width:kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.01: MediaQuery.of(context).size.width * 0.01),
               Text(
                 '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
                 style: Theme.of(context).textTheme.bodyMedium,

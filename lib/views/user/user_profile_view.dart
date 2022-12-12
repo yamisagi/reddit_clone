@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,7 +38,7 @@ class UserProfileView extends ConsumerWidget {
                           Positioned.fill(
                             child: Image.network(
                               user.banner,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                             ),
                           ),
                           Container(
@@ -46,7 +47,9 @@ class UserProfileView extends ConsumerWidget {
                             ),
                             alignment: Alignment.bottomLeft,
                             child: CircleAvatar(
-                              radius: MediaQuery.of(context).size.width * 0.12,
+                              radius: kIsWeb
+                                  ? MediaQuery.of(context).size.height * 0.03
+                                  : MediaQuery.of(context).size.width * 0.12,
                               backgroundImage: NetworkImage(
                                 user.profilePic,
                               ),

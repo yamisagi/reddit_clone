@@ -2,6 +2,7 @@
 
 import 'dart:io' show File;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
@@ -10,6 +11,7 @@ import 'package:reddit_clone/models/community_model.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/edit_community_view/avatar_picker.dart';
 import 'package:reddit_clone/util/edit_community_view/banner_picker.dart';
+import 'package:reddit_clone/util/reponsive/responsive.dart';
 
 class EditCommunityView extends ConsumerStatefulWidget {
   final String name;
@@ -26,9 +28,16 @@ class EditCommunityView extends ConsumerStatefulWidget {
 class _EditCommunityViewState extends ConsumerState<EditCommunityView> {
   File? bannerImage;
   File? avatarImage;
+  Uint8List? bannerWebFile;
+  Uint8List? avatarWebFile;
   Future<void> selectBannerImage() async {
     final banner = await pickImage();
     if (banner != null) {
+      if (kIsWeb) {
+        setState(() {
+          bannerWebFile = banner.files.first.bytes;
+        });
+      }
       setState(() {
         bannerImage = File(banner.files.first.path!);
       });
@@ -38,14 +47,21 @@ class _EditCommunityViewState extends ConsumerState<EditCommunityView> {
   Future<void> selectAvatarImage() async {
     final avatar = await pickImage();
     if (avatar != null) {
+      if (kIsWeb) {
+        setState(() {
+          avatarWebFile = avatar.files.first.bytes;
+        });
+      }
       setState(() {
         avatarImage = File(avatar.files.first.path!);
       });
     }
   }
 
-  void saveChanges(CommunityModel communityModel) async {
+  void saveChanges(CommunityModel communityModel) {
     ref.read(communityControllerProvider.notifier).editCommunity(
+          avaterWebFile: avatarWebFile,
+          bannerWebFile: bannerWebFile,
           community: communityModel,
           bannerImage: bannerImage,
           avatarImage: avatarImage,
@@ -76,7 +92,9 @@ class _EditCommunityViewState extends ConsumerState<EditCommunityView> {
                     actions: [
                       TextButton.icon(
                         label: const Text('Save'),
-                        onPressed: () => saveChanges(community),
+                        onPressed: () async {
+                          saveChanges(community);
+                        },
                         icon: const Icon(Icons.save),
                       ),
                     ],
@@ -87,19 +105,23 @@ class _EditCommunityViewState extends ConsumerState<EditCommunityView> {
                       children: [
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.3,
-                          child: Stack(
-                            children: [
-                              BannerPicker(
-                                func: selectBannerImage,
-                                community: community,
-                                bannerImage: bannerImage,
-                              ),
-                              AvatarPicker(
-                                func: selectAvatarImage,
-                                community: community,
-                                avatarImage: avatarImage,
-                              ),
-                            ],
+                          child: ResponsiveWidget(
+                            child: Stack(
+                              children: [
+                                BannerPicker(
+                                  bannerWebFile: bannerWebFile,
+                                  func: selectBannerImage,
+                                  community: community,
+                                  bannerImage: bannerImage,
+                                ),
+                                AvatarPicker(
+                                  avatarWebFile: avatarWebFile,
+                                  func: selectAvatarImage,
+                                  community: community,
+                                  avatarImage: avatarImage,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

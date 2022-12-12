@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/widget_constants.dart';
@@ -7,6 +8,7 @@ import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/home_view/delegates/search_delegate.dart';
 import 'package:reddit_clone/util/home_view/drawers/community_list_drawer.dart';
 import 'package:reddit_clone/util/home_view/drawers/user_drawer.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -55,12 +57,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
             },
             icon: const Icon(Icons.search),
           ),
+          if (kIsWeb)
+            IconButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/add_post');
+                },
+                icon: const Icon(Icons.add)),
           Builder(builder: (context) {
             return IconButton(
               onPressed: () {
                 displayUserDrawer(context);
               },
               icon: CircleAvatar(
+                radius: kIsWeb
+                    ? MediaQuery.of(context).size.height * 0.03
+                    : MediaQuery.of(context).size.width * 0.05,
                 backgroundColor:
                     ref.watch(themeNotifierProvider.notifier).themeMode ==
                             ThemeMode.dark
@@ -74,23 +85,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
       ),
       drawer: const CommunityListDrawer(),
       endDrawer: const UserDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        selectedItemColor: Theme.of(context).primaryColor,
-        onTap: changePage,
-        currentIndex: _page,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: '',
-          ),
-        ],
-      ),
+      bottomNavigationBar: !kIsWeb
+          ? BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              selectedItemColor: Theme.of(context).primaryColor,
+              onTap: changePage,
+              currentIndex: _page,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add),
+                  label: '',
+                ),
+              ],
+            )
+          : null,
       body: WidgetConstant.tabViews[_page],
     );
   }

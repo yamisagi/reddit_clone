@@ -33,7 +33,7 @@ class CommunityView extends ConsumerWidget {
                           Positioned.fill(
                             child: Image.network(
                               community.communityBanner,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
@@ -38,7 +39,9 @@ class CommunityHeaderWidget extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: CircleAvatar(
-              radius: MediaQuery.of(context).size.width * 0.1,
+             radius: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.03
+                      : MediaQuery.of(context).size.width * 0.05,
               backgroundImage: NetworkImage(
                 community.communityAvatar,
               ),

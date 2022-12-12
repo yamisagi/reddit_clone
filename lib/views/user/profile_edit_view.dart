@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:reddit_clone/constants/constants.dart';
@@ -11,6 +14,7 @@ import 'package:reddit_clone/theme/theme_notifier.dart';
 import 'package:reddit_clone/util/common/pick_image.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_avatar_picker.dart';
 import 'package:reddit_clone/util/profile_edit_view/user_banner_picker.dart';
+import 'package:reddit_clone/util/reponsive/responsive.dart';
 
 class EditProfileView extends ConsumerStatefulWidget {
   final String uid;
@@ -27,6 +31,8 @@ class EditProfileView extends ConsumerStatefulWidget {
 class _EditProfileViewState extends ConsumerState<EditProfileView> {
   File? bannerImage;
   File? avatarImage;
+  Uint8List? bannerWebFile;
+  Uint8List? avatarWebFile;
   late final TextEditingController _nameController;
 
   @override
@@ -44,6 +50,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   Future<void> selectBannerImage() async {
     final banner = await pickImage();
     if (banner != null) {
+      if (kIsWeb) {
+        setState(() {
+          bannerWebFile = banner.files.first.bytes;
+        });
+      }
       setState(() {
         bannerImage = File(banner.files.first.path!);
       });
@@ -53,6 +64,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   Future<void> selectAvatarImage() async {
     final avatar = await pickImage();
     if (avatar != null) {
+      if (kIsWeb) {
+        setState(() {
+          avatarWebFile = avatar.files.first.bytes;
+        });
+      }
       setState(() {
         avatarImage = File(avatar.files.first.path!);
       });
@@ -65,6 +81,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           bannerImage: bannerImage,
           name: _nameController.text.trim(),
           context: context,
+          avatarWebFile: avatarWebFile!,
+          bannerWebFile: bannerWebFile!,
         );
   }
 
@@ -91,7 +109,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     actions: [
                       TextButton.icon(
                         label: const Text('Save'),
-                        onPressed: () => saveProfile(),
+                        onPressed: saveProfile,
                         icon: const Icon(Icons.save),
                       ),
                     ],
@@ -102,47 +120,53 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       children: [
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.3,
-                          child: Stack(
-                            children: [
-                              UserBannerPicker(
-                                bannerImage: bannerImage,
-                                user: user,
-                                func: () {
-                                  selectBannerImage();
-                                },
-                              ),
-                              UserAvatarPicker(
-                                func: () {
-                                  selectAvatarImage();
-                                },
-                                user: user,
-                                avatarImage: avatarImage,
-                              ),
-                            ],
+                          child: ResponsiveWidget(
+                            child: Stack(
+                              children: [
+                                UserBannerPicker(
+                                  bannerWebFile: bannerWebFile,
+                                  bannerImage: bannerImage,
+                                  user: user,
+                                  func: () async {
+                                    await selectBannerImage();
+                                  },
+                                ),
+                                UserAvatarPicker(
+                                  avatarWebFile: avatarWebFile,
+                                  func: () async {
+                                    await selectAvatarImage();
+                                  },
+                                  user: user,
+                                  avatarImage: avatarImage,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            hintText: 'New User Name',
-                            fillColor: ref
-                                        .read(themeNotifierProvider.notifier)
-                                        .themeMode ==
-                                    ThemeMode.dark
-                                ? Colors.grey[800]
-                                : Colors.grey[200],
-                            filled: true,
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
+                        ResponsiveWidget(
+                          child: TextField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              hintText: 'New User Name',
+                              fillColor: ref
+                                          .read(themeNotifierProvider.notifier)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Colors.grey[800]
+                                  : Colors.grey[200],
+                              filled: true,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.grey,
+                              border: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),

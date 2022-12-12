@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
@@ -45,7 +46,9 @@ class CommentCardWidget extends ConsumerWidget {
                       ? ColorPallete.darkModeAppTheme.backgroundColor
                       : ColorPallete.whiteColor,
                   backgroundImage: NetworkImage(comment.profilePicUrl),
-                  radius: MediaQuery.of(context).size.width * 0.05,
+                 radius: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.03
+                      : MediaQuery.of(context).size.width * 0.05,
                 ),
               ),
               Expanded(

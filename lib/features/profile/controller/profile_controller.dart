@@ -3,6 +3,7 @@
 import 'dart:developer' show log;
 import 'dart:io' show File;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
@@ -46,15 +47,18 @@ class ProfileController extends StateNotifier<bool> {
       {required File? avatarImage,
       required File? bannerImage,
       required String name,
+      required Uint8List? avatarWebFile,
+      required Uint8List? bannerWebFile,
       required BuildContext context}) async {
     state = true;
     try {
       UserModel user = _ref.read(userProvider)!;
-      if (avatarImage != null) {
+      if (avatarImage != null || avatarWebFile != null) {
         final avatarUrl = await _storageRepository.storeFile(
           path: 'user/avatar',
           id: user.uid,
           file: avatarImage,
+          webFile: avatarWebFile,
         );
         user = user.copyWith(profilePic: avatarUrl);
 
@@ -67,11 +71,12 @@ class ProfileController extends StateNotifier<bool> {
         );
       }
 
-      if (bannerImage != null) {
+      if (bannerImage != null || bannerWebFile != null) {
         final bannerUrl = await _storageRepository.storeFile(
           path: 'user/banner',
           id: user.uid,
           file: bannerImage,
+          webFile: bannerWebFile,
         );
         user = user.copyWith(banner: bannerUrl);
         await _profileRepository.editUserProfile(user);

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
 import 'package:reddit_clone/features/post/repo/post_repo.dart';
@@ -157,6 +158,7 @@ class PostController extends StateNotifier<bool> {
     required String title,
     required CommunityModel selectedCommunity,
     required File? image,
+    required Uint8List? webFile,
   }) async {
     state = true;
 
@@ -165,10 +167,12 @@ class PostController extends StateNotifier<bool> {
     final imageRes = await _storageRepository.storeFile(
         path: 'post/${selectedCommunity.communityName}',
         id: postId,
-        file: image);
+        file: image,
+        webFile: webFile
+        );
 
     try {
-      if (image == null) {
+      if (image == null || webFile == null) {
         showSnackBar(
           context,
           'Image is required',

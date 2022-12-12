@@ -17,7 +17,7 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorPallete.redColor,

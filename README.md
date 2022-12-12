@@ -90,9 +90,8 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Add Comment Logic & Comment Page
 * [x] Implement Karma System
 * [x] Implement Award System
-* [ ] Implement Animations
-* [ ] Implement Unit Testing
-* I will update this later
+* [x] Responsive Design for Web
+* [ ] Project Done
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

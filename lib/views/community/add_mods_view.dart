@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
@@ -77,6 +78,9 @@ class _AddModsViewState extends ConsumerState<AddModsView> {
                               : {modCount = modCount};
                           return ListTile(
                             leading: CircleAvatar(
+                              radius: kIsWeb
+                                  ? MediaQuery.of(context).size.height * 0.02
+                                  : MediaQuery.of(context).size.width * 0.05,
                               backgroundImage: NetworkImage(user.profilePic),
                             ),
                             title: Text(user.name),

@@ -70,6 +70,7 @@ class SearchCommunityDelegate extends SearchDelegate {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: CircleAvatar(
+                      
                       backgroundImage: NetworkImage(
                         data[index].communityAvatar,
                       ),

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_clone/constants/constants.dart';
 import 'package:reddit_clone/features/auth/controller/auth_controller.dart';
@@ -116,18 +117,20 @@ class CommunityController extends StateNotifier<bool> {
   Future editCommunity(
       {required File? avatarImage,
       required File? bannerImage,
+      required Uint8List? avaterWebFile,
+      required Uint8List? bannerWebFile,
       required CommunityModel community,
       required BuildContext context}) async {
     state = true;
     try {
       /// Update Community Avatar and Banner with Firebase Storage
 
-      if (avatarImage != null) {
+      if (avatarImage != null  || bannerImage != null) {
         final avatarUrl = await _storageRepository.storeFile(
-          path: 'communities/avatar',
-          id: community.communityName,
-          file: avatarImage,
-        );
+            path: 'communities/avatar',
+            id: community.communityName,
+            file: avatarImage,
+            webFile: avaterWebFile);
         community = community.copyWith(communityAvatar: avatarUrl);
 
         /// Update Community Avatar with Firebase Firestore
@@ -140,12 +143,12 @@ class CommunityController extends StateNotifier<bool> {
         );
       }
 
-      if (bannerImage != null) {
+      if (bannerImage != null || avatarImage != null) {
         final bannerUrl = await _storageRepository.storeFile(
-          path: 'communities/banner',
-          id: community.communityName,
-          file: bannerImage,
-        );
+            path: 'communities/banner',
+            id: community.communityName,
+            file: bannerImage,
+            webFile: bannerWebFile);
         community = community.copyWith(communityBanner: bannerUrl);
 
         /// Update Community Banner with Firebase Firestore

@@ -6,6 +6,7 @@ import 'package:reddit_clone/features/post/controller/post_controller.dart';
 import 'package:reddit_clone/models/post_model.dart';
 import 'package:reddit_clone/util/post/comment_card.dart';
 import 'package:reddit_clone/util/post/post_card.dart';
+import 'package:reddit_clone/util/reponsive/responsive.dart';
 
 class CommentView extends ConsumerStatefulWidget {
   const CommentView({
@@ -49,58 +50,60 @@ class _CommentViewState extends ConsumerState<CommentView> {
             data: (post) {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    PostCardWidget(post),
-                    Padding(
-                      padding: Constants.smallPadding,
-                      child: TextField(
-                        controller: commentController,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: const Icon(
-                              Icons.send,
+                child: ResponsiveWidget(
+                  child: Column(
+                    children: [
+                      PostCardWidget(post),
+                      Padding(
+                        padding: Constants.smallPadding,
+                        child: TextField(
+                          controller: commentController,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.send,
+                              ),
+                              onPressed: () async {
+                                await addComment(context, post);
+                                // Then dismiss the keyboard
+                                FocusScope.of(context).unfocus(
+                                  disposition: UnfocusDisposition.scope,
+                                );
+                              },
                             ),
-                            onPressed: () async {
-                              await addComment(context, post);
-                              // Then dismiss the keyboard
-                              FocusScope.of(context).unfocus(
-                                disposition: UnfocusDisposition.scope,
-                              );
-                            },
+                            hintText: 'What are your thoughts?',
+                            border: OutlineInputBorder(
+                              borderRadius: Constants.rectRadius,
+                            ),
+                            filled: true,
                           ),
-                          hintText: 'What are your thoughts?',
-                          border: OutlineInputBorder(
-                            borderRadius: Constants.rectRadius,
-                          ),
-                          filled: true,
                         ),
                       ),
-                    ),
-                    Container(
-                      child: ref.watch(getCommentsByIdProvider(post.id)).when(
-                            error: (error, stack) => Text(error.toString()),
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
+                      Container(
+                        child: ref.watch(getCommentsByIdProvider(post.id)).when(
+                              error: (error, stack) => Text(error.toString()),
+                              loading: () => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              data: (comments) {
+                                return SingleChildScrollView(
+                                  child: ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: comments.length,
+                                    itemBuilder: (context, index) {
+                                      final comment = comments[index];
+                                      return CommentCardWidget(
+                                        comment: comment,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
                             ),
-                            data: (comments) {
-                              return SingleChildScrollView(
-                                child: ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: comments.length,
-                                  itemBuilder: (context, index) {
-                                    final comment = comments[index];
-                                    return CommentCardWidget(
-                                      comment: comment,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },
