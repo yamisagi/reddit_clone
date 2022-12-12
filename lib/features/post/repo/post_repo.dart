@@ -23,6 +23,9 @@ class PostRepository {
   CollectionReference get _commentsCollection =>
       _firestore.collection(FirebaseConstants.commentsCollection);
 
+  CollectionReference get _usersCollection =>
+      _firestore.collection(FirebaseConstants.usersCollection);
+
   Future<void> addPost(Post post) async {
     try {
       await _postsCollection.doc(post.id).set(post.toMap());
@@ -124,6 +127,7 @@ class PostRepository {
       throw e.message.toString();
     }
   }
+
   Stream<List<Comment>> getComments(String postId) {
     try {
       return _commentsCollection
@@ -133,6 +137,31 @@ class PostRepository {
           .map((snapshot) => snapshot.docs
               .map((doc) => Comment.fromMap(doc.data() as Map<String, dynamic>))
               .toList());
+    } on FirebaseException catch (e) {
+      log(e.code);
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> awardPost(
+      {required Post post,
+      required String awardName,
+      required String userId}) async {
+    try {
+      // Control if post author is awarding himself dont allow
+      if (post.uid != userId) {
+        await _postsCollection.doc(post.id).update({
+          'awards': FieldValue.arrayUnion([awardName]),
+        });
+
+        await _usersCollection.doc(userId).update({
+          'awards': FieldValue.arrayRemove([awardName]),
+        });
+
+        await _usersCollection.doc(post.uid).update({
+          'awards': FieldValue.arrayUnion([awardName]),
+        });
+      } 
     } on FirebaseException catch (e) {
       log(e.code);
       throw e.message.toString();

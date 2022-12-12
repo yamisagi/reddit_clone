@@ -48,6 +48,29 @@ class PostCardWidget extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           PostHeaderWidget(post: post, user: user!),
+                          if (post.awards.isNotEmpty) ...[
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: MediaQuery.of(context).size.width / 3,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: post.awards.length,
+                                itemBuilder: (context, index) {
+                                  final award = post.awards[index];
+                                  return Padding(
+                                    padding: Constants.smallPadding,
+                                    child: Image.asset(
+                                      Constants.awards[award]!,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.04,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                           const Divider(
                             color: ColorPallete.greyColor,
                             thickness: 1,

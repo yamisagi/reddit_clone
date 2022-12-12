@@ -323,4 +323,48 @@ class PostController extends StateNotifier<bool> {
   Stream<List<Comment>> getComments(String postId) {
     return _postRepository.getComments(postId);
   }
+
+  Future<void> awardPost(BuildContext context,
+      {required Post post, required String award}) async {
+    try {
+      final user = _ref.read(userProvider)!;
+      await _postRepository.awardPost(
+        awardName: award,
+        post: post,
+        userId: user.uid,
+      );
+      // Should control if the post sender is the same as the award sender
+      if (post.uid == user.uid) {
+        showSnackBar(
+          context,
+          'You can\'t award your own post',
+          _ref.read(scaffoldMessengerKeyProvider),
+        );
+        Routemaster.of(context).pop();
+      } else {
+        await _ref
+            .read(profileControllerProvider.notifier)
+            .updateUserKarma(UserKarma.awardPost);
+
+        _ref.read(userProvider.notifier).update((state) {
+          state?.awards.remove(award);
+          return state;
+        });
+
+        showSnackBar(
+          context,
+          'Awarded',
+          _ref.read(scaffoldMessengerKeyProvider),
+        );
+        Routemaster.of(context).pop();
+      }
+    } on Exception catch (e) {
+      log(e.toString());
+      showSnackBar(
+        context,
+        'Something went wrong',
+        _ref.read(scaffoldMessengerKeyProvider),
+      );
+    }
+  }
 }

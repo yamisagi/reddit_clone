@@ -34,6 +34,13 @@ class PostCardBottomWidget extends ConsumerWidget {
     Routemaster.of(context).push('/comments/${post.id}');
   }
 
+  Future<void> awardPost(
+      BuildContext context, WidgetRef ref, String award) async {
+    await ref
+        .read(postControllerProvider.notifier)
+        .awardPost(context, post: post, award: award);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
@@ -100,7 +107,40 @@ class PostCardBottomWidget extends ConsumerWidget {
                   return Container();
                 }
               },
-            )
+            ),
+        IconButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    //We will show the gift dialog here
+                    return Dialog(
+                        child: Padding(
+                      padding: Constants.regularPadding,
+                      child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                          ),
+                          itemCount: user.awards.length,
+                          itemBuilder: (context, index) {
+                            final awards = user.awards[index];
+                            return GestureDetector(
+                              onTap: () async {
+                                await awardPost(context, ref, awards);
+                              },
+                              child: Padding(
+                                padding: Constants.smallPadding,
+                                child:
+                                    Image.asset(Constants.awards[awards] ?? ''),
+                              ),
+                            );
+                          }),
+                    ));
+                  });
+            },
+            icon: const Icon(Icons.card_giftcard_rounded))
       ],
     );
   }

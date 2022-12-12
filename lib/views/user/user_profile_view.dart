@@ -100,6 +100,7 @@ class UserProfileView extends ConsumerWidget {
                           Center(child: Text(error.toString())),
                       data: (posts) {
                         return ListView.builder(
+                          padding: EdgeInsets.zero,
                           itemCount: posts.length,
                           itemBuilder: (context, index) {
                             final post = posts[index];

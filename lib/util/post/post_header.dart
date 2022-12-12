@@ -77,7 +77,10 @@ class PostHeaderWidget extends StatelessWidget {
               onPressed: () async {
                 await deletePost(context, ref);
               },
-              icon: const Icon(Icons.delete),
+              icon: Icon(
+                Icons.delete,
+                size: MediaQuery.of(context).size.width * 0.05,
+              ),
               color: ColorPallete.redColor,
             ),
           ),

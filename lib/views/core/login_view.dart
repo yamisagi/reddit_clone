@@ -34,20 +34,6 @@ class LoginView extends ConsumerWidget {
             ),
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              ref.read(authControllProvider.notifier).signOut();
-            },
-            child: Text(
-              'Continue as Guest',
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                  color: ColorPallete.redColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),

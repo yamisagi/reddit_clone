@@ -53,7 +53,7 @@ class AuthRepository {
           banner: Constants.bannerDefault,
           isAnonymous: userCredential.user!.isAnonymous,
           karma: 0,
-          awards: [],
+          awards: ['thankyou', 'plusone'],
         );
         await _usersCollection
             .doc(userCredential.user!.uid)
@@ -123,7 +123,6 @@ class AuthRepository {
 
   Future<void> signOut() async {
     await _auth.signOut();
-      
   }
 
   Stream<UserModel> getUserData(String uid) {
