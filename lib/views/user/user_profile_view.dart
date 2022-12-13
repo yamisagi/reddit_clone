@@ -62,12 +62,6 @@ class UserProfileView extends ConsumerWidget {
                                 padding: Constants.regularPadding,
                                 alignment: Alignment.bottomLeft,
                                 child: OutlinedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    maximumSize: Size(
-                                        MediaQuery.of(context).size.width * 0.3,
-                                        MediaQuery.of(context).size.height *
-                                            0.05),
-                                  ),
                                   onPressed: () {
                                     Routemaster.of(context).push(
                                       '/edit_profile/$uid',

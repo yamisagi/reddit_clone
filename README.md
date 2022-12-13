@@ -91,7 +91,7 @@ In this project, I will use Firebase, Animations, [Riverpod](https://pub.dev/pac
 * [x] Implement Karma System
 * [x] Implement Award System
 * [x] Responsive Design for Web
-* [ ] Project Done
+* [x] Project Done
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

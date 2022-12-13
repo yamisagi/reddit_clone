@@ -28,7 +28,7 @@ class UserAvatarPicker extends StatelessWidget {
           : MediaQuery.of(context).size.width * 0.05,
       top: kIsWeb
           ? MediaQuery.of(context).size.height * 0.20
-          : MediaQuery.of(context).size.height * 0.15,
+          : MediaQuery.of(context).size.height * 0.22,
       child: GestureDetector(
         onTap: func,
         child: avatarWebFile != null
@@ -36,7 +36,7 @@ class UserAvatarPicker extends StatelessWidget {
                 backgroundColor: ColorPallete.lightGreyColor,
                 radius: kIsWeb
                     ? MediaQuery.of(context).size.height * 0.04
-                    : MediaQuery.of(context).size.width * 0.01,
+                    : MediaQuery.of(context).size.width * 0.07,
                 backgroundImage: MemoryImage(avatarWebFile!),
               )
             : avatarImage != null
@@ -44,14 +44,14 @@ class UserAvatarPicker extends StatelessWidget {
                     backgroundColor: ColorPallete.lightGreyColor,
                     radius: kIsWeb
                         ? MediaQuery.of(context).size.height * 0.04
-                        : MediaQuery.of(context).size.width * 0.01,
+                        : MediaQuery.of(context).size.width * 0.07,
                     backgroundImage: FileImage(avatarImage!),
                   )
                 : CircleAvatar(
                     backgroundColor: ColorPallete.lightGreyColor,
                     radius: kIsWeb
                         ? MediaQuery.of(context).size.height * 0.04
-                        : MediaQuery.of(context).size.width * 0.01,
+                        : MediaQuery.of(context).size.width * 0.07,
                     backgroundImage: NetworkImage(user.profilePic),
                   ),
       ),

@@ -70,7 +70,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         });
       }
       setState(() {
-        avatarImage = File(avatar.files.first.path!);
+        avatarImage = File(avatar.files.first.path ?? '');
       });
     }
   }
@@ -81,8 +81,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           bannerImage: bannerImage,
           name: _nameController.text.trim(),
           context: context,
-          avatarWebFile: avatarWebFile!,
-          bannerWebFile: bannerWebFile!,
+          avatarWebFile: avatarWebFile,
+          bannerWebFile: bannerWebFile,
         );
   }
 

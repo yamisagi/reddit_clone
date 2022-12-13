@@ -24,7 +24,7 @@ class PostHeaderWidget extends StatelessWidget {
   }
 
   void navigateToUserProfile(BuildContext context) {
-    Routemaster.of(context).push('/u/${post.uid}');
+    Routemaster.of(context).push('/u/${post.author}');
   }
 
   void navigateToCommunity(BuildContext context) {

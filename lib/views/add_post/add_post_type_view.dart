@@ -94,6 +94,7 @@ class _AddPostTypeViewState extends ConsumerState<AddPostTypeView> {
                 linkController: _linkController,
                 communities: communities,
                 bannerImage: bannerImage,
+                bannerWebFile: bannerWebFile,
                 type: widget.type,
               );
             },
